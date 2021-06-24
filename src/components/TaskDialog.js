@@ -11,10 +11,6 @@ import {
 
 const useStyles = makeStyles((theme) => ({
 
-  form: {
-    flexGrow:1,
-    flexShrink: 1
-  },
   formControl: {
     margin: theme.spacing(1),
   },
@@ -26,8 +22,11 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskDialog(props) {
 
-  const [description, setDescription] = React.useState(() => (props.type === 'add') ? '' : props.task.description);
   const classes = useStyles();
+
+  let description = (props.task === undefined) ? '' : props.task.description;
+  console.log(description);
+  
 
   const onSend = () => {
     const task = {
@@ -46,39 +45,42 @@ function TaskDialog(props) {
       return;
     }
 
-    setDescription(e.target.value);
+    description = e.target.value;
   }
 
   return (
     <Dialog open={props.isOpen} onClose={() => props.handleClosing(null)} aria-labelledby="form-dialog-title" maxWidth="xs" className={classes.dialog} fullWidth >
-      <form onSubmit={onSend} className={classes.form}>
-        <DialogContent >
-          <TextField
-            multiline
-            rowsMax={4}
-            required
-            autoFocus
-            margin="dense"
-            id="task-desc"
-            label="Task Description"
-            variant="outlined"
-            placeholder="new task, lets goooo!"
-            onChange={e => onUpdateDescription(e)}
-            fullWidth
-            defaultValue={(props.type === 'edit') ? props.task.description : ''}
-          />
-        </DialogContent>
+      <DialogContent >
+        <TextField
+          multiline
+          rowsMax={4}
+          required
+          autoFocus
+          onFocus={(e) => {
+            let temp_value = e.target.value
+            e.target.value = ''
+            e.target.value = temp_value
+          }}
+          margin="dense"
+          id="task-desc"
+          label="Task Description"
+          variant="outlined"
+          placeholder={(props.type === 'add' ) ? "new task, lets goooo!" : ''}
+          onChange={e => onUpdateDescription(e)}
+          fullWidth
+          defaultValue={description}
+        />
+      </DialogContent>
 
-        <DialogActions className={classes.dialogActionBar}>
-          <Button type="submit" color="primary" variant="contained">
-            {(props.type === 'add' ) ? 'Add Task' : 'Done'}
-          </Button>
-          <div className={classes.grow} />
-          <Button color="secondary" variant="contained" onClick={() => (props.handleClosing(null))}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </form>
+      <DialogActions className={classes.dialogActionBar}>
+        <Button type="submit" color="primary" variant="contained" onClick={onSend} >
+          {(props.type === 'add' ) ? 'Add Task' : 'Done'}
+        </Button>
+        <div className={classes.grow} />
+        <Button color="secondary" variant="contained" onClick={() => (props.handleClosing(null))}>
+          Cancel
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }

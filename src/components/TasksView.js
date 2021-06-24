@@ -6,8 +6,10 @@ import {
     ListSubheader, 
     ListItem, 
     ListItemText,
-    IconButton
+    IconButton,
 } from '@material-ui/core';
+
+import { useTheme  } from '@material-ui/core/styles';
 
 import {
     EditOutlined as EditIcon,
@@ -15,19 +17,18 @@ import {
     Delete as DeleteIcon
 } from '@material-ui/icons';
 
-
 function TasksView(props) {
+    const theme = useTheme();
 
     return (
         <div className="today_view" style={{
-            paddingLeft: "55px",
-            paddingRight: "55px",
+            padding: theme.spacing(0, 7),
             maxWidth: "800px",
             margin: "0 auto"
         }}
         >
             <header id="view_header">
-                <Typography variant="h5" align="left" style={{ padding: "36px 55px 0px 55px", marginBottom: "24px" }}>Tasks</Typography>
+                <Typography variant="h5" align="left" style={{ padding: theme.spacing(4, 7, 0, 7), marginBottom: theme.spacing(3) }}>Tasks</Typography>
             </header>
 
             <div id="view_content">
@@ -37,24 +38,24 @@ function TasksView(props) {
                     </ListSubheader>}
                 >
                     {props.tasks.map((task) => (
-                        <ListItem button divider={true} style={{ borderRadius: "5px", paddingLeft: "0px" }} key={task.id}>
+                        <ListItem button divider={true} style={{ borderRadius: theme.spacing(1), paddingLeft: theme.spacing(0) }} key={task.id}>
                         <IconButton
                             variant="outlined"
                             onClick={() => props.onTaskDone(task, true)}
-                            style={{ margin: "0 5px" }}
+                            style={{ margin: theme.spacing(0, 1) }}
                         >
                             <CheckIcon color="primary" />
                         </IconButton>
                         <ListItemText
-                            primary={task.description}
-                            secondary="Today"
+                            primary= {task.description}
+                            secondary= 'asd'
                         />
-                        <span style={{ position: "absolute", right: "5px", bottom: "15px" }}>
+                        <span style={{ position: "absolute", right: theme.spacing(1), bottom: theme.spacing(2) }}>
                             <IconButton
                                 variant="outlined"
                                 size='small'
                                 onClick={() => props.onEditOpen(task)}
-                                style={{ marginRight: "5px" }}
+                                style={{ marginRight: theme.spacing(1) }}
                             >
                                 <EditIcon />
                             </IconButton>
