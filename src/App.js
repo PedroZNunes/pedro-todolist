@@ -11,13 +11,12 @@ import {
 import Menu from './components/Menu'
 import TopBar from './components/TopBar'
 import Content from './components/Content';
-import AddModal from './components/AddModal';
-import EditModal from './components/EditModal';
+import TaskDialog from './components/TaskDialog';
 
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
   },
@@ -72,16 +71,19 @@ function App() {
   const [taskToEdit, setTaskToEdit] = useState({ id: 0, description: null });
   const onEditOpen = (task) => {
     console.log('edit open');
-    setEditOpen(true);
     setTaskToEdit(task);
+    setEditOpen(true);
   }
   const onEditClose = (newTask) => {
     setEditOpen(false);
     editTask(newTask);
   }
 
-  const onTaskDone = (task) => {
-    console.log("completed task");
+  const onTaskDone = (task, isDone) => {
+    (isDone) ? 
+      console.log("completed task. logging data") :
+      console.log("task deleted. no logging.") ; 
+
     let tempTasks = [...tasks];
     const index = tempTasks.indexOf(task);
     if (index > -1) {
@@ -135,8 +137,8 @@ function App() {
       <TopBar onOpenMenu={onMenuOpen} onAddTaskOpen={onAddOpen} />
       <Menu isOpen={menuOpen} handleClose={onMenuClose} drawerWidth={drawerWidth} />
       <Content tasks={tasks} onEditOpen={onEditOpen} onTaskDone={onTaskDone} />
-      <AddModal isOpen={addOpen} handleClosing={onAddClose} />
-      <EditModal isOpen={editOpen} handleClosing={onEditClose} task={taskToEdit} />
+      <TaskDialog isOpen={addOpen} handleClosing={onAddClose} type="add" />
+      <TaskDialog isOpen={editOpen} handleClosing={onEditClose} type="edit" task={taskToEdit} />
     </div>
   );
 }

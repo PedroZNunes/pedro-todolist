@@ -40,7 +40,7 @@ function TasksView(props) {
                         <ListItem button divider={true} style={{ borderRadius: "5px", paddingLeft: "0px" }} key={task.id}>
                         <IconButton
                             variant="outlined"
-                            onClick={() => props.onTaskDone(task)}
+                            onClick={() => props.onTaskDone(task, true)}
                             style={{ margin: "0 5px" }}
                         >
                             <CheckIcon color="primary" />
@@ -60,8 +60,8 @@ function TasksView(props) {
                             </IconButton>
                             <IconButton
                                 variant="outlined"
-                                href="/#"
                                 size='small'
+                                onClick={() => props.onTaskDone(task, false)}
                             >
                                 <DeleteIcon />
                             </IconButton>
