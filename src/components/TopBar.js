@@ -29,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+
+
 function TopBar(props) {
 
     const classes = useStyles();
@@ -40,7 +42,7 @@ function TopBar(props) {
                 <MenuIcon />
             </IconButton>
             <div className={classes.grow} />
-            <IconButton onClick={props.onAddTaskOpen}>
+            <IconButton onClick={() => props.handleAddTaskOpen(null)}>
                 <AddIcon />
             </IconButton>
             </Toolbar>

@@ -48,13 +48,13 @@ function TasksView(props) {
                         </IconButton>
                         <ListItemText
                             primary= {task.description}
-                            secondary= 'asd'
+                            secondary= {props.projects.find(project => project.id === task.projectID).name}
                         />
                         <span style={{ position: "absolute", right: theme.spacing(1), bottom: theme.spacing(2) }}>
                             <IconButton
                                 variant="outlined"
                                 size='small'
-                                onClick={() => props.onEditOpen(task)}
+                                onClick={() => props.handleTaskDialogOpen(task)}
                                 style={{ marginRight: theme.spacing(1) }}
                             >
                                 <EditIcon />

@@ -30,7 +30,7 @@ function Content(props) {
         <main className={classes.content}>
             <Toolbar />
             <div id="editor" className={classes.editor}>
-                <TasksView tasks={props.tasks} onEditOpen={props.onEditOpen} onTaskDone={props.onTaskDone} />
+                <TasksView projects={props.projects} tasks={props.tasks} handleTaskDialogOpen={props.handleTaskDialogOpen} onTaskDone={props.onTaskDone} />
             </div>
         </main>
     );

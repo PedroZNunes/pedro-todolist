@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   Dialog,
@@ -7,80 +7,140 @@ import {
   DialogActions,
   Button,
   makeStyles,
+  FormControl,
+  MenuItem,
+  Select
 } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
-
   formControl: {
     margin: theme.spacing(1),
+    minWidth: 120
   },
   dialogActionBar: {
     justifyContent: "space-between",
-    padding: theme.spacing(1, 3) 
-  }
+    padding: theme.spacing(1, 3)
+  },
+  projectSelect: {}
 }))
 
 function TaskDialog(props) {
-
   const classes = useStyles();
-
-  let description = (props.task === undefined) ? '' : props.task.description;
-  console.log(description);
   
+  const [description, setDescription] = useState(props.task?.description);
 
-  const onSend = () => {
-    const task = {
-      id: (props.type === 'add') ? null : props.task.id,
-      description: description
-    };
+  const [projectID, setProjectID] = useState(props.task?.projectID );
+  
+  const [id, setID] = useState(props.task?.id );
 
-    console.log(task); 
+  useEffect(() => {
+    setDescription(props.task.description);
+    setProjectID(props.task.projectID);
+    setID(props.task.id);
+  }, [props.isOpen])
 
-    props.handleClosing(task);
-  }
+  // if ( !isNewTask ) {
+  //   setDescription(props.task.description);
+  //   setProjectID(props.task.projectID);
+  // }
 
-  const onUpdateDescription = (e) => {
-    if(e.nativeEvent.inputType === 'insertLineBreak'){
-      onSend();
-      return;
+  // let task = {}
+  // if (props.task === undefined) {
+  //   task = {
+  //     id: null,
+  //     description: '',
+  //     projectID: props.projects[0].id
+  //   }
+  // } else {
+  //   task = props.task;
+  // }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let out = {
+      id: id,
+      description: description,
+      projectID: projectID
     }
 
-    description = e.target.value;
+    console.log('sending');
+    console.log(out);
+
+    props.handleClosing(out);
+  }
+
+  const handleProjectUpdate = (e) => {
+    setProjectID(e.target.value);
+    console.log(projectID);
+  
+  }
+
+  const handleDescriptionUpdate = (e) => {
+    if (e.nativeEvent.inputType === 'insertLineBreak') {
+      handleSubmit();
+      return;
+    }
+    setDescription(e.target.value);
+    console.log(description);
   }
 
   return (
     <Dialog open={props.isOpen} onClose={() => props.handleClosing(null)} aria-labelledby="form-dialog-title" maxWidth="xs" className={classes.dialog} fullWidth >
-      <DialogContent >
-        <TextField
-          multiline
-          rowsMax={4}
-          required
-          autoFocus
-          onFocus={(e) => {
-            let temp_value = e.target.value
-            e.target.value = ''
-            e.target.value = temp_value
-          }}
-          margin="dense"
-          id="task-desc"
-          label="Task Description"
-          variant="outlined"
-          placeholder={(props.type === 'add' ) ? "new task, lets goooo!" : ''}
-          onChange={e => onUpdateDescription(e)}
-          fullWidth
-          defaultValue={description}
-        />
-      </DialogContent>
+      <form onSubmit={handleSubmit}>
+        <DialogContent >
+          <FormControl required className={classes.formControl}>
+            <TextField
+              multiline
+              rowsMax={4}
+              required
+              autoFocus
+              onFocus={(e) => {
+                //getting the carret to last position on first focus
+                let temp_value = e.target.value
+                e.target.value = ''
+                e.target.value = temp_value
+              }}
+              margin="dense"
+              id="task-desc"
+              label="Task Description"
+              variant="outlined"
+              placeholder={"what u gon do?"}
+              onChange={e => handleDescriptionUpdate(e)}
+              fullWidth
+              defaultValue={description}
+            />
+          </FormControl>
 
-      <DialogActions className={classes.dialogActionBar}>
-        <Button type="submit" color="primary" variant="contained" onClick={onSend} >
-          {(props.type === 'add' ) ? 'Add Task' : 'Done'}
-        </Button>
-        <div className={classes.grow} />
-        <Button color="secondary" variant="contained" onClick={() => (props.handleClosing(null))}>
-          Cancel
-        </Button>
-      </DialogActions>
+          <FormControl required className={classes.formControl}>
+            <Select
+              // value={task.projectID}
+              value={projectID}
+              onChange={e => handleProjectUpdate(e)}
+              className={classes.projectSelect}
+            >
+              {// get projects array. update array on app.js? maybe update async
+                props.projects.map((project) => (
+                    <MenuItem value={project.id}>
+                      {project.name.toString()}
+                    </MenuItem>
+                ))
+              }
+            </Select>
+          </FormControl>
+
+        </DialogContent>
+
+
+        <DialogActions className={classes.dialogActionBar}>
+          <Button type="submit" color="primary" variant="contained" >
+            Done
+          </Button>
+          <div className={classes.grow} />
+          <Button color="secondary" variant="contained" onClick={() => (props.handleClosing(null))}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 }

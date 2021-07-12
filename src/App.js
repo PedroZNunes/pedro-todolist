@@ -12,6 +12,7 @@ import Menu from './components/Menu'
 import TopBar from './components/TopBar'
 import Content from './components/Content';
 import TaskDialog from './components/TaskDialog';
+import { SortByAlpha } from '@material-ui/icons';
 
 
 const drawerWidth = 240;
@@ -33,51 +34,110 @@ function App() {
     {
       id: 0,
       description: "eat",
+      projectID: 2
     },
     {
       id: 1,
       description: "sleep",
+      projectID: 2
     },
     {
       id: 2,
       description: "take dog outside",
+      projectID: 2
     },
     {
       id: 3,
-      description: "get GrandChampion in Rocket League",
+      description: "get GC in RL",
+      projectID: 0
     },
     {
       id: 4,
-      description: "finish todo project",
+      description: "finish project",
+      projectID: 1
     },
     {
       id: 5,
       description: "get a job",
+      projectID: 1
+    },
+    {
+      id: 6,
+      description: "trip to TI",
+      projectID: 0
+    },
+    {
+      id: 7,
+      description: "get decent chair",
+      projectID: 0
     }
   ]);
+
+  let projects = 
+  [
+    {
+      id:     0,
+      name:   'Alpha', 
+      color:  '#f1f1f1'
+    },
+    {
+      id:     1,
+      name:   'Phoenix', 
+      color:  '#a4a4a4'
+    },
+    {
+      id:     2,
+      name:   'House', 
+      color:  '#cc33cc'
+    }
+  ]
 
   const [menuOpen, setMenuOpen] = useState(false);
   const onMenuOpen = () => setMenuOpen(true);
   const onMenuClose = () => setMenuOpen(false);
 
-  const [addOpen, setAddOpen] = useState(false);
-  const onAddOpen = () => setAddOpen(true);
-  const onAddClose = (newTask) => {
-    setAddOpen(false);
-    addTask(newTask);
+  const [taskDialogState, setTaskDialogState] = useState(false);
+  const handleTaskDialogOpen = (task) => {
+    let outTask;
+    if (task === null) {
+      console.log('adding new task');
+      let newID = 0;
+      tasks.forEach((task) => {
+        if (task.id >= newID)
+          newID = task.id + 1;
+      }
+    )
+      outTask = {
+        id: newID,
+        description: '',
+        projectID: 0
+      }
+
+    }
+    else {
+      console.log('editing existing task');
+      outTask = task;
+    }
+    setTaskToEdit(outTask);
+    setTaskDialogState(true);
   }
 
-  const [editOpen, setEditOpen] = useState(false);
+  const handleTaskDialogClose = (newTask) => {
+    setTaskDialogState(false);
+    addOrUpdateTask(newTask);
+  }
+
+  // const [editOpen, setEditOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState({ id: 0, description: null });
-  const onEditOpen = (task) => {
-    console.log('edit open');
-    setTaskToEdit(task);
-    setEditOpen(true);
-  }
-  const onEditClose = (newTask) => {
-    setEditOpen(false);
-    editTask(newTask);
-  }
+  // const onEditOpen = (task) => {
+  //   console.log('edit open');
+  //   setTaskToEdit(task);
+  //   setTaskDialogState(true);
+  // }
+  // const onEditClose = (newTask) => {
+  //   setEditOpen(false);
+  //   addOrUpdateTask(newTask);
+  // }
 
   const onTaskDone = (task, isDone) => {
     (isDone) ? 
@@ -95,50 +155,51 @@ function App() {
     setTasks(tempTasks);
   }
 
-  const addTask = (newTask) => {
+  const addOrUpdateTask = (newTask) => {
     if (newTask === null) {
-      console.log("no task returned by new task dialog");
+      console.log("no task returned by the task dialog");
       return;
     }
 
-    let lastID = 0;
-    tasks.forEach((task) => {
-      lastID = (lastID < task.id) ? task.id : lastID;
-    });
+    // add
+    if (newTask.id === null) {
+      newTask.id = tasks[tasks.length - 1].id + 1;
+      let joined = tasks.concat(newTask);
+      setTasks(joined);
+      console.log(joined);
+    } 
+    // edit
+    else {
+      let tempTasks = [...tasks];
+      
+      let isEdited = false;
+      
+      tempTasks.map((task) => {
+        if (task.id === newTask.id) {
+          task.description = newTask.description;
+          task.projectID = newTask.projectID;
+          isEdited = true;
+        }
+        return tempTasks;
+      })
 
-    newTask.id = lastID + 1;
-
-    let joined = tasks.concat(newTask);
-    setTasks(joined);
-    console.log(joined);
-  }
-
-  const editTask = (editedTask) => {
-    if (editedTask === null) {
-      console.log('editing canceled');
-      return;
+      if(!isEdited)
+        tempTasks.push(newTask);
+        
+      setTasks(tempTasks);
+      console.log(tempTasks);
     }
 
-    let tempTasks = [...tasks];
-    tempTasks.map((task) => {
-      if (task.id === editedTask.id) {
-        task.description = editedTask.description;
-      }
-      return tempTasks;
-    })
-    setTasks(tempTasks);
-    console.log(tempTasks);
   }
 
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <TopBar onOpenMenu={onMenuOpen} onAddTaskOpen={onAddOpen} />
+      <TopBar onOpenMenu={onMenuOpen} handleAddTaskOpen={handleTaskDialogOpen} />
       <Menu isOpen={menuOpen} handleClose={onMenuClose} drawerWidth={drawerWidth} />
-      <Content tasks={tasks} onEditOpen={onEditOpen} onTaskDone={onTaskDone} />
-      <TaskDialog isOpen={addOpen} handleClosing={onAddClose} type="add" />
-      <TaskDialog isOpen={editOpen} handleClosing={onEditClose} type="edit" task={taskToEdit} />
+      <Content tasks={tasks} handleTaskDialogOpen={handleTaskDialogOpen} onTaskDone={onTaskDone} projects={projects} />
+      <TaskDialog isOpen={taskDialogState} handleClosing={handleTaskDialogClose} projects={projects} task={taskToEdit} />
     </div>
   );
 }
