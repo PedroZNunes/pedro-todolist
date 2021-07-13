@@ -1,6 +1,10 @@
 import React from 'react';
 
-import {    
+import { useTheme } from '@material-ui/core/styles';
+
+import { makeStyles } from '@material-ui/core/styles';
+
+import {
     Inbox as InboxIcon,
     Today as TodayIcon,
     Event as UpcomingIcon,
@@ -11,106 +15,96 @@ import {
 
 import {
     List,
-    ListItem, 
-    Divider, 
-    IconButton, 
+    ListItem,
+    Divider,
+    IconButton,
+    Icon,
     ListItemText,
-    Collapse
+    Collapse,
 } from '@material-ui/core'
 
 
+const useStyles = makeStyles((theme) => ({
+    list: {
+        padding: theme.spacing(0, 1), listStyleType: "none", textAlign: "left" 
+    },
+    listItem: {
+        paddingBottom: theme.spacing(0)
+    },
+    listItemIcon: {
+        margin: theme.spacing(0, 1, 1, 0)
+    },
+    subListItem: {
+        paddingLeft: theme.spacing(7)
+    }
+}));
 
 function MenuBody(props) {
+
+    const theme = useTheme();
+
+    const classes = useStyles(props);
     
     const [projectsOpen, setProjectsOpen] = React.useState(true);
+
+    const projects = props.projects;
+
+    const filters = [
+        { text: 'Inbox', icon: <InboxIcon />,       onClick: () => props.handleProjectFilter(null) },
+        { text: 'Today', icon: <TodayIcon />,       onClick: () => {} },
+        { text: 'Upcoming', icon: <UpcomingIcon />, onClick: () => {} },
+    ]
 
     const handleProjectsOpen = () => {
         setProjectsOpen(!projectsOpen);
     };
 
     return (
-        <div id="list_holder" style={{backgroundColor:"#eee", height:"100vh", paddingTop:"10px", overflow: 'auto' }}>
-            <List style={{padding:"0 10px", listStyleType:"none", textAlign:"left"}}> 
-                <ListItem divider={false} button style={{paddingTop: '0px', paddingBottom: '0px'}}>
-                    <IconButton
-                        variant="outlined"
-                        color="primary"
-                        href="/#"
-                    >
-                        <InboxIcon />
-                    </IconButton>
-                    <ListItemText 
-                        primary="Inbox" 
-                    />
-                    <ListItemText 
-                        style={{textAlign: "right"}}
-                        primary="3" 
-                    />
-                </ListItem>
-          
-                <ListItem divider={false} button style={{borderRadius:"5px", paddingTop: '0px', paddingBottom: '0px'}}>
-                    <IconButton
-                        variant="outlined"
-                        color="primary"
-                        href="/#"
-                    >
-                        <TodayIcon />
-                    </IconButton>
-                    <ListItemText 
-                        primary="Today" 
-                    />
-                    <ListItemText 
-                        style={{textAlign: "right"}}
-                        primary="5" 
-                    />
-                </ListItem>
-          
-                <ListItem divider={false} button style={{borderRadius:"5px", paddingTop: '0px', paddingBottom: '0px'}}>
-                
-                    <IconButton
-                        variant="outlined"
-                        color="primary"
-                        href="/#"
-                    >
-                        <UpcomingIcon />
-                    </IconButton>
-                    <ListItemText 
-                        primary="Upcoming" 
-                    />
-                    <ListItemText 
-                        style={{textAlign: "right"}}
-                        primary="9" 
-                    />
-                </ListItem>
-                
-                <Divider style={{margin:"5px 0"}} />
-                
-                <ListItem button onClick={handleProjectsOpen} style={{borderRadius:"5px"}}>
-                    <IconButton variant="outlined" style={{paddingTop:"0px", paddingBottom:"2px"}}>
-                    {projectsOpen ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+        <div id="list_holder" style={{ backgroundColor: "#eee", height: "100vh", paddingTop: theme.spacing(1), overflow: 'auto' }}>
+            <List className={classes.list}>
+                {filters?.map((filter) => (
+                    <ListItem divider={false} button className={classes.listItem} onClick={filter.onClick}>
+                        <IconButton
+                            variant="outlined"
+                            color="primary"
+                            href="/#"
+                        >
+                            {filter.icon}
+                        </IconButton>
+                        <ListItemText
+                            primary={filter.text}
+                        />
+                        <ListItemText
+                            style={{ textAlign: "right" }}
+                            primary="3"
+                        />
+                    </ListItem>
+
+                ))}
+
+                <Divider style={{ margin: theme.spacing(1, 0) }} />
+
+                <ListItem button onClick={handleProjectsOpen} className={classes.listItem}>
+                    <IconButton variant="outlined" >
+                        {projectsOpen ? <ExpandMoreIcon /> : <ExpandLessIcon />}
                     </IconButton>
                     <ListItemText primary="Projects" />
                 </ListItem>
 
                 <Collapse in={projectsOpen} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding style={{ paddingLeft: "15px"}}>
-                    
-                    <ListItem button style={{borderRadius:"5px"}}>
-                        <IconButton variant="outlined" style={{paddingTop:"0px", paddingBottom:"2px"}} >
-                            <ProjectColorIcon style={{color:"red"}} />
-                        </IconButton>
-                        <ListItemText primary="Project 1" />
-                    </ListItem>
+                    <List component="div" className={classes.List} disablePadding>
+                        {projects?.map((project) => (
+                            <ListItem button className={classes.subListItem} key={project.id} onClick={() => props.handleProjectFilter(project.id)}>
+                                <Icon variant="outlined" className={classes.listItemIcon} >
+                                    <ProjectColorIcon  style={{ color: project.color }} />
+                                </Icon>
+                                <ListItemText primary={project.name} />
+                            </ListItem>
 
-                    <ListItem button style={{borderRadius:"5px"}}>
-                        <IconButton variant="outlined" style={{paddingTop:"0px", paddingBottom:"2px"}}>
-                            <ProjectColorIcon />
-                        </IconButton>
-                        <ListItemText primary="Project 2" />
-                    </ListItem>
+                        ))}
                     </List>
                 </Collapse>
-          
+
             </List>
         </div>
     );

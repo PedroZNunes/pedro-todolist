@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,7 +12,6 @@ import Menu from './components/Menu'
 import TopBar from './components/TopBar'
 import Content from './components/Content';
 import TaskDialog from './components/TaskDialog';
-import { SortByAlpha } from '@material-ui/icons';
 
 
 const drawerWidth = 240;
@@ -27,10 +26,12 @@ const useStyles = makeStyles(() => ({
 function App() {
 
   const classes = useStyles();
-
+  const [menuOpen, setMenuOpen] = useState(false);
+  const onMenuOpen = () => setMenuOpen(true);
+  const onMenuClose = () => setMenuOpen(false);
 
   // this will later be changed when I get the backend working
-  const [tasks, setTasks] = useState([
+  const [allTasks, setAllTasks] = useState([
     {
       id: 0,
       description: "eat",
@@ -73,12 +74,13 @@ function App() {
     }
   ]);
 
+  
   let projects = 
   [
     {
       id:     0,
       name:   'Alpha', 
-      color:  '#f1f1f1'
+      color:  '#aa0000'
     },
     {
       id:     1,
@@ -91,10 +93,17 @@ function App() {
       color:  '#cc33cc'
     }
   ]
+  
+  const [tasksOnScreen, setTasksOnScreen] = useState(allTasks);
+  const [projectIDOnScreen, setprojectIDOnScreen] = useState(null);
 
-  const [menuOpen, setMenuOpen] = useState(false);
-  const onMenuOpen = () => setMenuOpen(true);
-  const onMenuClose = () => setMenuOpen(false);
+  // update tasks on screen
+  useEffect(() => {
+    filterTasks(projectIDOnScreen);
+  },[allTasks, projectIDOnScreen]);
+
+
+  const [taskToEdit, setTaskToEdit] = useState({ id: 0, description: null });
 
   const [taskDialogState, setTaskDialogState] = useState(false);
   const handleTaskDialogOpen = (task) => {
@@ -102,7 +111,7 @@ function App() {
     if (task === null) {
       console.log('adding new task');
       let newID = 0;
-      tasks.forEach((task) => {
+      allTasks.forEach((task) => {
         if (task.id >= newID)
           newID = task.id + 1;
       }
@@ -127,32 +136,21 @@ function App() {
     addOrUpdateTask(newTask);
   }
 
-  // const [editOpen, setEditOpen] = useState(false);
-  const [taskToEdit, setTaskToEdit] = useState({ id: 0, description: null });
-  // const onEditOpen = (task) => {
-  //   console.log('edit open');
-  //   setTaskToEdit(task);
-  //   setTaskDialogState(true);
-  // }
-  // const onEditClose = (newTask) => {
-  //   setEditOpen(false);
-  //   addOrUpdateTask(newTask);
-  // }
 
   const onTaskDone = (task, isDone) => {
     (isDone) ? 
       console.log("completed task. logging data") :
       console.log("task deleted. no logging.") ; 
 
-    let tempTasks = [...tasks];
+    let tempTasks = [...allTasks];
     const index = tempTasks.indexOf(task);
     if (index > -1) {
       tempTasks.splice(index, 1);
     }
     console.log(tempTasks);
-    console.log(tasks);
+    console.log(allTasks);
 
-    setTasks(tempTasks);
+    setAllTasks(tempTasks);
   }
 
   const addOrUpdateTask = (newTask) => {
@@ -163,14 +161,14 @@ function App() {
 
     // add
     if (newTask.id === null) {
-      newTask.id = tasks[tasks.length - 1].id + 1;
-      let joined = tasks.concat(newTask);
-      setTasks(joined);
+      newTask.id = allTasks[allTasks.length - 1].id + 1;
+      let joined = allTasks.concat(newTask);
+      setAllTasks(joined);
       console.log(joined);
     } 
     // edit
     else {
-      let tempTasks = [...tasks];
+      let tempTasks = [...allTasks];
       
       let isEdited = false;
       
@@ -186,19 +184,39 @@ function App() {
       if(!isEdited)
         tempTasks.push(newTask);
         
-      setTasks(tempTasks);
+      setAllTasks(tempTasks);
       console.log(tempTasks);
     }
 
   }
 
+  const handleProjectFilter = (projectID) => {
+    setprojectIDOnScreen(projectID)
+  }
+ 
+  const filterTasks = (projectID) => {
+    console.log(`filtering by project id: ${projectID}`);
+    if (projectID === null){
+      setTasksOnScreen(allTasks);
+      return;
+    }
+    
+    let filteredTasks = [];
+    allTasks.forEach((task) => {
+      if (task.projectID === projectID){
+        filteredTasks.push(task);
+      }
+    })
+    setTasksOnScreen(filteredTasks);
+    console.log(filteredTasks);
+  }
 
   return (
     <div className={classes.root}>
       <CssBaseline />
       <TopBar onOpenMenu={onMenuOpen} handleAddTaskOpen={handleTaskDialogOpen} />
-      <Menu isOpen={menuOpen} handleClose={onMenuClose} drawerWidth={drawerWidth} />
-      <Content tasks={tasks} handleTaskDialogOpen={handleTaskDialogOpen} onTaskDone={onTaskDone} projects={projects} />
+      <Menu isOpen={menuOpen} handleClose={onMenuClose} drawerWidth={drawerWidth} handleProjectFilter={handleProjectFilter} projects={projects}/>
+      <Content tasks={tasksOnScreen} handleTaskDialogOpen={handleTaskDialogOpen} onTaskDone={onTaskDone} projects={projects} />
       <TaskDialog isOpen={taskDialogState} handleClosing={handleTaskDialogClose} projects={projects} task={taskToEdit} />
     </div>
   );
