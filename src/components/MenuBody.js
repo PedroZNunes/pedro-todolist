@@ -11,6 +11,7 @@ import {
     FiberManualRecord as ProjectColorIcon,
     ExpandLess as ExpandLessIcon,
     ExpandMore as ExpandMoreIcon,
+    Add as AddIcon
 } from '@material-ui/icons'
 
 import {
@@ -102,8 +103,15 @@ function MenuBody(props) {
                             </ListItem>
 
                         ))}
+                        <ListItem className={classes.subListItem} onClick={props.handleAddProjectOpen}>
+                            <IconButton >
+                                <AddIcon />
+                            </IconButton>
+                        </ListItem>
                     </List>
                 </Collapse>
+
+                
 
             </List>
         </div>
