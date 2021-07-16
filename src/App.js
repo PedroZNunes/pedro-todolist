@@ -20,7 +20,9 @@ const drawerWidth = 240;
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
-    height: '100vh'
+    minHeight: '100vh',
+    height: 'fit-content'
+
   },
   content: {
     minHeight: '100%',
@@ -256,7 +258,7 @@ function App() {
   // update tasks on screen
   useEffect(() => {
     filterTasks(projectIDOnScreen);
-  }, [projects, projectIDOnScreen]);
+  }, [projects, projectIDOnScreen, allTasks]);
   
   //#endregion
 
