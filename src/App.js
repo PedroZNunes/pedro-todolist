@@ -22,6 +22,10 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     height: '100vh'
   },
+  content: {
+    minHeight: '100%',
+    height: 'fit-content'
+  }
 }));
 
 
@@ -230,6 +234,10 @@ function App() {
   }
   
   const addProject = (newProject) => {
+    if (newProject === null) {
+      console.log("no task returned by the task dialog");
+      return;
+    }
     newProject.id = projects[projects.length - 1].id + 1;
     let joined = projects.concat(newProject);
     setProjects(joined);
@@ -272,6 +280,7 @@ function App() {
         handleTaskDialogOpen={handleTaskDialogOpen}
         onTaskDone={onTaskDone}
         projects={projects}
+        className={classes.content}
       />
 
       <TaskDialog
