@@ -57,7 +57,12 @@ function Menu(props) {
                 onClose={props.handleClose}
             >
                 <Toolbar />
-                <MenuBody projects={props.projects} handleProjectFilter={props.handleProjectFilter} handleAddProjectOpen={props.handleAddProjectOpen} />
+                <MenuBody 
+                    projects={props.projects} 
+                    handleProjectFilter={props.handleProjectFilter} 
+                    handleAddProjectOpen={props.handleAddProjectOpen}
+                    handleProjectDelete={props.handleProjectDelete}
+                />
             </Drawer>
             </Hidden> 
 

@@ -25,7 +25,6 @@ const useStyles = makeStyles(() => ({
 
   },
   content: {
-    minHeight: '100%',
     height: 'fit-content'
   }
 }));
@@ -34,7 +33,7 @@ const useStyles = makeStyles(() => ({
 function App() {
   const classes = useStyles();
 
-//#region menu
+  //#region menu
   const [menuOpen, setMenuOpen] = useState(false);
   const onMenuOpen = () => setMenuOpen(true);
   const onMenuClose = () => setMenuOpen(false);
@@ -55,11 +54,11 @@ function App() {
     setTasksOnScreen(filteredTasks);
     console.log(filteredTasks);
   }
-//#endregion
+  //#endregion
 
   //#region tasks
   // this will later be changed when I get the backend working
-  
+
   const [allTasks, setAllTasks] = useState([
     {
       id: 0,
@@ -189,10 +188,10 @@ function App() {
     }
 
   }
-//#endregion
+  //#endregion
 
-//#region projects
-  const [projects, setProjects] = useState([
+  //#region projects
+  const [allProjects, setAllProjects] = useState([
     {
       id: 0,
       name: 'Alpha',
@@ -211,55 +210,101 @@ function App() {
   ]);
 
   const [projectToEdit, setProjectToEdit] = useState({ id: 0, name: null });
-  
+
   const [projectDialogState, setProjectDialogState] = useState(false);
-  
+
   const handleProjectDialogOpen = (project) => {
     console.log('adding new project');
     let newID = 0;
-    projects.forEach((project) => {
+    allProjects.forEach((project) => {
       if (project.id >= newID)
-      newID = project.id + 1;
+        newID = project.id + 1;
     })
     let newProject = {
       id: newID,
       name: ''
     }
-    
+
     setProjectToEdit(newProject);
     setProjectDialogState(true);
   }
-  
+
   const handleProjectDialogClose = (newProject) => {
     setProjectDialogState(false);
-    addProject(newProject);
+    addOrUpdateProject(newProject);
   }
-  
-  const addProject = (newProject) => {
+
+  const addOrUpdateProject = (newProject) => {
     if (newProject === null) {
       console.log("no task returned by the task dialog");
       return;
     }
-    newProject.id = projects[projects.length - 1].id + 1;
-    let joined = projects.concat(newProject);
-    setProjects(joined);
-    console.log(joined);
+    //add
+    if (newProject.id === null) {
+      newProject.id = allProjects[allProjects.length - 1].id + 1;
+      let joined = allProjects.concat(newProject);
+      setAllProjects(joined);
+      console.log(joined);
+    }
+    //edit
+    else {
+      let tempProjects = [...allProjects];
+
+      let isEdited = false;
+
+      tempProjects.map((project) => {
+        if (project.id === newProject.id) {
+          project.description = newProject.description;
+          project.projectID = newProject.projectID;
+          isEdited = true;
+        }
+        return tempProjects;
+      })
+
+      if (!isEdited)
+        tempProjects.push(newProject);
+
+      setAllProjects(tempProjects);
+      console.log(tempProjects);
+    }
+
   }
-  
+
+  const handleProjectDelete = (project) => {
+    console.log("project deleted.");
+
+    let tempProjects = [...allProjects];
+    const index = tempProjects.indexOf(project);
+    if (index > -1) {
+      tempProjects.splice(index, 1);
+    }
+    console.log(tempProjects);
+    setAllProjects(tempProjects);
+
+    let tempTasks = []
+    allTasks.forEach((task) => {
+      if (task.projectID !== project.id)
+        tempTasks.push(task);
+    })
+
+    console.log(tempTasks);
+    setAllTasks(tempTasks);
+  }
+
   const handleProjectFilter = (projectID) => {
     setProjectIDOnScreen(projectID)
   }
   //#endregion
-  
+
   //#region filter
   const [projectIDOnScreen, setProjectIDOnScreen] = useState(null);
   const [tasksOnScreen, setTasksOnScreen] = useState(allTasks);
-  
+
   // update tasks on screen
   useEffect(() => {
     filterTasks(projectIDOnScreen);
-  }, [projects, projectIDOnScreen, allTasks]);
-  
+  }, [allProjects, projectIDOnScreen, allTasks]);
+
   //#endregion
 
   return (
@@ -274,28 +319,30 @@ function App() {
         handleClose={onMenuClose}
         drawerWidth={drawerWidth}
         handleProjectFilter={handleProjectFilter}
+        handleProjectEdit={addOrUpdateProject}
+        handleProjectDelete={handleProjectDelete}
         handleAddProjectOpen={handleProjectDialogOpen}
-        projects={projects}
+        projects={allProjects}
       />
       <Content
         tasks={tasksOnScreen}
         handleTaskDialogOpen={handleTaskDialogOpen}
         onTaskDone={onTaskDone}
-        projects={projects}
+        projects={allProjects}
         className={classes.content}
       />
 
       <TaskDialog
         isOpen={taskDialogState}
         handleClosing={handleTaskDialogClose}
-        projects={projects}
+        projects={allProjects}
         task={taskToEdit}
       />
 
       <ProjectDialog
         isOpen={projectDialogState}
         handleClosing={handleProjectDialogClose}
-        projects={projects}
+        projects={allProjects}
         project={projectToEdit}
       />
 
