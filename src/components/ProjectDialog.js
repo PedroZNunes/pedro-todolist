@@ -47,20 +47,26 @@ function ProjectDialog(props) {
   const classes = useStyles();
 
   const [name, setName] = useState('');
+
   const [color, setColor] = useState('red');
 
+  const [id, setID] = useState(props.project?.id );
+
+
   useEffect(() => {
+    setID(props.project.id);
     setName(props.project.name);
-    setColor(props.project.color)
+    setColor(props.project.color);
   }, [props.isOpen])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     let out = {
-      id: null,
+      id: id,
       name: name,
       color: color
     }
+
     props.handleClosing(out);
   }
 

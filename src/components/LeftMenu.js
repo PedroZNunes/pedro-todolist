@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function Menu(props) {
+function LeftMenu(props) {
 
     const classes = useStyles(props);
     const theme = useTheme();
@@ -70,4 +70,4 @@ function Menu(props) {
     );
 }
 
-export default Menu;
+export default LeftMenu;

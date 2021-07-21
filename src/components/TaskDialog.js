@@ -39,22 +39,6 @@ function TaskDialog(props) {
     setID(props.task.id);
   }, [props.isOpen])
 
-  // if ( !isNewTask ) {
-  //   setDescription(props.task.description);
-  //   setProjectID(props.task.projectID);
-  // }
-
-  // let task = {}
-  // if (props.task === undefined) {
-  //   task = {
-  //     id: null,
-  //     description: '',
-  //     projectID: props.projects[0].id
-  //   }
-  // } else {
-  //   task = props.task;
-  // }
-
   const handleSubmit = (e) => {
     e.preventDefault();
     let out = {
@@ -62,9 +46,6 @@ function TaskDialog(props) {
       description: description,
       projectID: projectID
     }
-
-    console.log('sending');
-    console.log(out);
 
     props.handleClosing(out);
   }

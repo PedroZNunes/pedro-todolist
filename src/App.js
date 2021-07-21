@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 
 
-import Menu from './components/Menu'
+import LeftMenu from './components/LeftMenu'
 import TopBar from './components/TopBar'
 import Content from './components/Content';
 import TaskDialog from './components/TaskDialog';
@@ -209,20 +209,28 @@ function App() {
     }
   ]);
 
-  const [projectToEdit, setProjectToEdit] = useState({ id: 0, name: null });
+  const [projectToEdit, setProjectToEdit] = useState({ });
 
   const [projectDialogState, setProjectDialogState] = useState(false);
 
-  const handleProjectDialogOpen = (project) => {
-    console.log('adding new project');
-    let newID = 0;
-    allProjects.forEach((project) => {
-      if (project.id >= newID)
+  const handleProjectDialogOpen = (e, project) => {
+    let newProject = {}
+    if(project === null){
+      console.log('adding new project');
+      let newID = 0;
+      allProjects.forEach((project) => {
+        if (project.id >= newID)
         newID = project.id + 1;
-    })
-    let newProject = {
-      id: newID,
-      name: ''
+      })
+      newProject = {
+        id: newID,
+        name: '',
+        color: 'red',
+      }
+    } 
+    else {
+      console.log('editing existing task');
+      newProject = project;
     }
 
     setProjectToEdit(newProject);
@@ -254,9 +262,9 @@ function App() {
 
       tempProjects.map((project) => {
         if (project.id === newProject.id) {
-          project.description = newProject.description;
-          project.projectID = newProject.projectID;
-          isEdited = true;
+          project.name   = newProject.name;
+          project.color   = newProject.color;
+          isEdited  = true;
         }
         return tempProjects;
       })
@@ -280,6 +288,9 @@ function App() {
     }
     console.log(tempProjects);
     setAllProjects(tempProjects);
+
+    if(projectIDOnScreen === project.id)
+      setProjectIDOnScreen(null);
 
     let tempTasks = []
     allTasks.forEach((task) => {
@@ -314,7 +325,7 @@ function App() {
         onOpenMenu={onMenuOpen}
         handleAddTaskOpen={handleTaskDialogOpen}
       />
-      <Menu
+      <LeftMenu
         isOpen={menuOpen}
         handleClose={onMenuClose}
         drawerWidth={drawerWidth}

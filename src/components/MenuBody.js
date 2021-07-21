@@ -38,14 +38,13 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(0, 1, 1, 0)
     },
     subListItem: {
-        paddingLeft: theme.spacing(7)
+        marginLeft: theme.spacing(4),
+        width: 'auto'
     },
     grow: {
         flexGrow: 1
     }
 }));
-
-
 
 
 
@@ -62,7 +61,7 @@ function MenuBody(props) {
                 e.preventDefault();
                 e.stopPropagation();
                 handleProjectSubMenuClose(e);
-                props.handleProjectEdit(selectedProject); }
+                props.handleAddProjectOpen(e, selectedProject); }
         },
         {
             title: 'Delete',
@@ -85,10 +84,10 @@ function MenuBody(props) {
     const filters = [
         { text: 'Inbox', icon: <InboxIcon />, onClick: () => props.handleProjectFilter(null) },
         { text: 'Today', icon: <TodayIcon />, onClick: () => { } },
-        { text: 'Upcoming', icon: <UpcomingIcon />, onClick: () => { } },
+        { text: 'Upcoming', icon: <UpcomingIcon />, onClick: () => { } }
     ]
 
-    const [selectedProject, setSelectedProject] = React.useState({});
+    const [selectedProject, setSelectedProject] = React.useState({ });
     const [anchorEl, setAnchorEl] = React.useState(null);
     const projectSubMenuOpen = Boolean(anchorEl);
 
@@ -148,20 +147,31 @@ function MenuBody(props) {
 
                                 <ListItemText primary={project.name} />
                                 <div className={classes.grow} />
+                                {(projects.length > 1) && 
                                 <IconButton
                                     aria-controls="long-menu"
                                     aria-haspopup="true"
+                                    size='small'
                                     onClick={(e) => handleProjectSubMenuClick(e, project)}
                                 >
                                     <MoreHorizIcon />
-                                </IconButton>
+                                </IconButton>}
                             </ListItem>
 
                         ))}
-                        <ListItem className={classes.subListItem} onClick={props.handleAddProjectOpen}>
-                            <IconButton >
-                                <AddIcon />
-                            </IconButton>
+                        <ListItem 
+                            className={classes.subListItem} 
+                            style={{paddingTop: theme.spacing(1)}}
+                            onClick={(e) => props.handleAddProjectOpen(e, null)}
+                            button
+                        >
+                        <div className={classes.grow} />
+
+                        <Icon size='small' >
+                            <AddIcon />
+                        </Icon>
+                        <div className={classes.grow} />
+
                         </ListItem>
                     </List>
                 </Collapse>
