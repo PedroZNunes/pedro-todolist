@@ -1,4 +1,5 @@
 import './App.css';
+
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 
@@ -63,42 +64,50 @@ function App() {
     {
       id: 0,
       description: "eat",
-      projectID: 2
+      projectID: 2,
+      date: new Date(2021, 7, 28)
     },
     {
       id: 1,
       description: "sleep",
-      projectID: 2
+      projectID: 2,
+      date: new Date(2021, 9, 28)
     },
     {
       id: 2,
       description: "take dog outside",
-      projectID: 2
+      projectID: 2,
+      date: new Date(2021, 7, 28)
     },
     {
       id: 3,
       description: "get GC in RL",
-      projectID: 0
+      projectID: 0,
+      date: new Date(2021, 6, 28)
     },
     {
       id: 4,
       description: "finish project",
-      projectID: 1
+      projectID: 1,
+      date: new Date(2021, 10, 28)
     },
     {
       id: 5,
       description: "get a job",
-      projectID: 1
+      projectID: 1,
+      date: new Date(2021, 11, 28)
     },
     {
       id: 6,
       description: "trip to TI",
-      projectID: 0
+      projectID: 0,
+      date: new Date(2021, 6, 20)
     },
     {
       id: 7,
       description: "get decent chair",
-      projectID: 0
+      projectID: 0,
+      date: new Date(2021, 6, 19)
     }
   ]);
 
@@ -117,7 +126,8 @@ function App() {
       outTask = {
         id: newID,
         description: '',
-        projectID: 0
+        projectID: 0,
+        date: new Date()
       }
     }
     else {
@@ -209,25 +219,25 @@ function App() {
     }
   ]);
 
-  const [projectToEdit, setProjectToEdit] = useState({ });
+  const [projectToEdit, setProjectToEdit] = useState({});
 
   const [projectDialogState, setProjectDialogState] = useState(false);
 
   const handleProjectDialogOpen = (e, project) => {
     let newProject = {}
-    if(project === null){
+    if (project === null) {
       console.log('adding new project');
       let newID = 0;
       allProjects.forEach((project) => {
         if (project.id >= newID)
-        newID = project.id + 1;
+          newID = project.id + 1;
       })
       newProject = {
         id: newID,
         name: '',
         color: 'red',
       }
-    } 
+    }
     else {
       console.log('editing existing task');
       newProject = project;
@@ -262,9 +272,9 @@ function App() {
 
       tempProjects.map((project) => {
         if (project.id === newProject.id) {
-          project.name   = newProject.name;
-          project.color   = newProject.color;
-          isEdited  = true;
+          project.name = newProject.name;
+          project.color = newProject.color;
+          isEdited = true;
         }
         return tempProjects;
       })
@@ -289,7 +299,7 @@ function App() {
     console.log(tempProjects);
     setAllProjects(tempProjects);
 
-    if(projectIDOnScreen === project.id)
+    if (projectIDOnScreen === project.id)
       setProjectIDOnScreen(null);
 
     let tempTasks = []
@@ -319,45 +329,45 @@ function App() {
   //#endregion
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <TopBar
-        onOpenMenu={onMenuOpen}
-        handleAddTaskOpen={handleTaskDialogOpen}
-      />
-      <LeftMenu
-        isOpen={menuOpen}
-        handleClose={onMenuClose}
-        drawerWidth={drawerWidth}
-        handleProjectFilter={handleProjectFilter}
-        handleProjectEdit={addOrUpdateProject}
-        handleProjectDelete={handleProjectDelete}
-        handleAddProjectOpen={handleProjectDialogOpen}
-        projects={allProjects}
-      />
-      <Content
-        tasks={tasksOnScreen}
-        handleTaskDialogOpen={handleTaskDialogOpen}
-        onTaskDone={onTaskDone}
-        projects={allProjects}
-        className={classes.content}
-      />
+      <div className={classes.root}>
+        <CssBaseline />
+        <TopBar
+          onOpenMenu={onMenuOpen}
+          handleAddTaskOpen={handleTaskDialogOpen}
+        />
+        <LeftMenu
+          isOpen={menuOpen}
+          handleClose={onMenuClose}
+          drawerWidth={drawerWidth}
+          handleProjectFilter={handleProjectFilter}
+          handleProjectEdit={addOrUpdateProject}
+          handleProjectDelete={handleProjectDelete}
+          handleAddProjectOpen={handleProjectDialogOpen}
+          projects={allProjects}
+        />
+        <Content
+          tasks={tasksOnScreen}
+          handleTaskDialogOpen={handleTaskDialogOpen}
+          onTaskDone={onTaskDone}
+          projects={allProjects}
+          className={classes.content}
+        />
 
-      <TaskDialog
-        isOpen={taskDialogState}
-        handleClosing={handleTaskDialogClose}
-        projects={allProjects}
-        task={taskToEdit}
-      />
+        <TaskDialog
+          isOpen={taskDialogState}
+          handleClosing={handleTaskDialogClose}
+          projects={allProjects}
+          task={taskToEdit}
+        />
 
-      <ProjectDialog
-        isOpen={projectDialogState}
-        handleClosing={handleProjectDialogClose}
-        projects={allProjects}
-        project={projectToEdit}
-      />
+        <ProjectDialog
+          isOpen={projectDialogState}
+          handleClosing={handleProjectDialogClose}
+          projects={allProjects}
+          project={projectToEdit}
+        />
 
-    </div>
+      </div>
   );
 }
 

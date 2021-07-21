@@ -103,7 +103,6 @@ function ProjectDialog(props) {
 
           <FormControl required className={classes.formControl} fullWidth >
             <ColorPalette palette={colorPalette} onSelect={e => handleColorUpdate(e)} />
-            {/* <ColorPicker defaultValue="white" hideTextfield onFocusOut={e => handleColorUpdate(e)}/> */}
           </FormControl>
         </DialogContent>
 

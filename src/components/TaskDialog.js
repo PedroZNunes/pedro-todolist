@@ -9,8 +9,10 @@ import {
   makeStyles,
   FormControl,
   MenuItem,
-  Select
+  Select,
 } from '@material-ui/core'
+
+
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -26,35 +28,24 @@ const useStyles = makeStyles((theme) => ({
 
 function TaskDialog(props) {
   const classes = useStyles();
-  
-  const [description, setDescription] = useState(props.task?.description);
 
-  const [projectID, setProjectID] = useState(props.task?.projectID );
-  
-  const [id, setID] = useState(props.task?.id );
+  const [description, setDescription]   = useState(props.task.description ?? '');
+
+  const [projectID, setProjectID]       = useState(props.task.projectID ?? 0);
+
+  const [id, setID]                     = useState(props.task.id ?? null);
+
+  const [dueDate, setDueDate] = useState(props.task.date ?? new Date());
+
 
   useEffect(() => {
-    setDescription(props.task.description);
-    setProjectID(props.task.projectID);
-    setID(props.task.id);
+    console.log(new Date())
+    setDescription(props.task.description ?? '');
+    setProjectID(props.task.projectID ?? 0);
+    setID(props.task.id ?? null);
+    setDueDate(props.task.date ?? new Date())
   }, [props.isOpen])
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    let out = {
-      id: id,
-      description: description,
-      projectID: projectID
-    }
-
-    props.handleClosing(out);
-  }
-
-  const handleProjectUpdate = (e) => {
-    setProjectID(e.target.value);
-    console.log(projectID);
-  
-  }
 
   const handleDescriptionUpdate = (e) => {
     if (e.nativeEvent.inputType === 'insertLineBreak') {
@@ -64,6 +55,29 @@ function TaskDialog(props) {
     setDescription(e.target.value);
     console.log(description);
   }
+
+  const handleProjectUpdate = (e) => {
+    setProjectID(e.target.value);
+    console.log(projectID);
+
+  }
+  
+  const handleDateUpdate = (e) => {
+    setDueDate(new Date(e.target.value));
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let out = {
+      id: id,
+      description: description,
+      projectID: projectID,
+      date: dueDate
+    }
+
+    props.handleClosing(out);
+  }
+
 
   return (
     <Dialog open={props.isOpen} onClose={() => props.handleClosing(null)} aria-labelledby="form-dialog-title" maxWidth="xs" className={classes.dialog} fullWidth >
@@ -101,12 +115,27 @@ function TaskDialog(props) {
             >
               {// get projects array. update array on app.js? maybe update async
                 props.projects.map((project) => (
-                    <MenuItem value={project.id}>
-                      {project.name.toString()}
-                    </MenuItem>
+                  <MenuItem value={project.id}>
+                    {project.name.toString()}
+                  </MenuItem>
                 ))
               }
             </Select>
+          </FormControl>
+
+          <FormControl required className={classes.formControl}>
+          <TextField
+            id="date"
+            label="Due"
+            type="date"
+            // className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={e => handleDateUpdate(e)}
+            defaultValue={dueDate}
+
+          />
           </FormControl>
 
         </DialogContent>
