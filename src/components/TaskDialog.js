@@ -9,21 +9,35 @@ import {
   makeStyles,
   FormControl,
   MenuItem,
-  Select,
+  Select,InputLabel
 } from '@material-ui/core'
 
 
 
 const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
+  dialog:{
     minWidth: 120
   },
-  dialogActionBar: {
-    justifyContent: "space-between",
-    padding: theme.spacing(1, 3)
+  dialogContent: {
+    display: 'flex', 
+    flexFlow:'row wrap', 
+    justifyContent:'space-between'
   },
-  projectSelect: {}
+  formControl: {
+    margin: theme.spacing(3,0,0,0),
+    minWidth: 120,
+    flexGrow: 1
+  },
+  dialogActionBar: {
+    padding: theme.spacing(3, 3)
+  },
+  grow: {
+    minWidth:theme.spacing(3),
+    flexGrow: 1
+  },
+  description: {
+    flexGrow: 1
+  },
 }))
 
 function TaskDialog(props) {
@@ -36,14 +50,17 @@ function TaskDialog(props) {
   const [id, setID]                     = useState(props.task.id ?? null);
 
   const [dueDate, setDueDate] = useState(props.task.date ?? new Date());
-
+  const getDateToScreen = () => {
+    let newDate = dueDate.toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit'}).replaceAll('. ', '-').replaceAll('.', '')
+    return newDate;
+  }
 
   useEffect(() => {
-    console.log(new Date())
     setDescription(props.task.description ?? '');
     setProjectID(props.task.projectID ?? 0);
     setID(props.task.id ?? null);
     setDueDate(props.task.date ?? new Date())
+    console.log(props.task.date ?? new Date())
   }, [props.isOpen])
 
 
@@ -63,7 +80,10 @@ function TaskDialog(props) {
   }
   
   const handleDateUpdate = (e) => {
-    setDueDate(new Date(e.target.value));
+    let tempDate = new Date(e.target.valueAsNumber);
+    let offset = tempDate.getTimezoneOffset() * 60 * 1000;
+    let newDate = new Date(e.target.valueAsNumber + offset);
+    setDueDate(newDate);
   }
 
   const handleSubmit = (e) => {
@@ -83,7 +103,7 @@ function TaskDialog(props) {
     <Dialog open={props.isOpen} onClose={() => props.handleClosing(null)} aria-labelledby="form-dialog-title" maxWidth="xs" className={classes.dialog} fullWidth >
       <form onSubmit={handleSubmit}>
         <DialogContent >
-          <FormControl required className={classes.formControl}>
+          <FormControl required className={classes.formControl, classes.description} fullWidth>
             <TextField
               multiline
               rowsMax={4}
@@ -95,23 +115,24 @@ function TaskDialog(props) {
                 e.target.value = ''
                 e.target.value = temp_value
               }}
-              margin="dense"
               id="task-desc"
               label="Task Description"
               variant="outlined"
               placeholder={"what u gon do?"}
               onChange={e => handleDescriptionUpdate(e)}
-              fullWidth
               defaultValue={description}
             />
           </FormControl>
-
-          <FormControl required className={classes.formControl}>
+        </DialogContent>
+        <DialogContent className={classes.dialogContent}>
+          <FormControl required className={classes.formControl} style={{maxWidth: '188px'}}>
+            <InputLabel style={{transform: 'translate(14px, -6px) scale(0.75)'}}> Project </InputLabel>
             <Select
-              // value={task.projectID}
+              id="project"
+              variant="outlined"
+              label="Project *"
               value={projectID}
               onChange={e => handleProjectUpdate(e)}
-              className={classes.projectSelect}
             >
               {// get projects array. update array on app.js? maybe update async
                 props.projects.map((project) => (
@@ -122,32 +143,31 @@ function TaskDialog(props) {
               }
             </Select>
           </FormControl>
-
-          <FormControl required className={classes.formControl}>
+          <FormControl required className={classes.formControl} style={{maxWidth: '188px'}}>
           <TextField
             id="date"
+            variant="outlined"
             label="Due"
             type="date"
             // className={classes.textField}
             InputLabelProps={{
               shrink: true,
             }}
+            value={getDateToScreen()}
             onChange={e => handleDateUpdate(e)}
-            defaultValue={dueDate}
-
+            onChangeRaw={(e) => e.preventDefault()}
           />
           </FormControl>
 
         </DialogContent>
 
-
         <DialogActions className={classes.dialogActionBar}>
-          <Button type="submit" color="primary" variant="contained" >
-            Done
+          <Button color="secondary" variant="contained" size="large" onClick={() => (props.handleClosing(null))}>
+            Cancel
           </Button>
           <div className={classes.grow} />
-          <Button color="secondary" variant="contained" onClick={() => (props.handleClosing(null))}>
-            Cancel
+          <Button type="submit" color="primary" size="large" variant="contained" >
+            Done
           </Button>
         </DialogActions>
       </form>

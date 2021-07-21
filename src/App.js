@@ -65,7 +65,7 @@ function App() {
       id: 0,
       description: "eat",
       projectID: 2,
-      date: new Date(2021, 7, 28)
+      date: new Date()
     },
     {
       id: 1,
@@ -185,6 +185,7 @@ function App() {
         if (task.id === newTask.id) {
           task.description = newTask.description;
           task.projectID = newTask.projectID;
+          task.date = newTask.date;
           isEdited = true;
         }
         return tempTasks;
