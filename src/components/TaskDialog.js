@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import moment from 'moment';
+
 import {
   Dialog,
   TextField,
@@ -45,22 +47,24 @@ function TaskDialog(props) {
 
   const [description, setDescription]   = useState(props.task.description ?? '');
 
-  const [projectID, setProjectID]       = useState(props.task.projectID ?? 0);
+  const [projectID, setProjectID]       = useState(props.task.projectID   ?? 0);
 
-  const [id, setID]                     = useState(props.task.id ?? null);
+  const [id, setID]                     = useState(props.task.id          ?? null);
 
-  const [dueDate, setDueDate] = useState(props.task.date ?? new Date());
+  const [dueDate, setDueDate]           = useState(props.task.date ?? moment());
+  
   const getDateToScreen = () => {
-    let newDate = dueDate.toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit'}).replaceAll('. ', '-').replaceAll('.', '')
+    //let newDate = dueDate.toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit'}).replaceAll('. ', '-').replaceAll('.', '')
+    let newDate = dueDate.format("YYYY-MM-DD");
     return newDate;
   }
 
   useEffect(() => {
     setDescription(props.task.description ?? '');
     setProjectID(props.task.projectID ?? 0);
-    setID(props.task.id ?? null);
-    setDueDate(props.task.date ?? new Date())
-    console.log(props.task.date ?? new Date())
+    setID(props.task.id         ?? null);
+    setDueDate(props.task.date  ?? moment())
+    console.log(props.task.date ?? moment())
   }, [props.isOpen])
 
 
@@ -71,6 +75,7 @@ function TaskDialog(props) {
     }
     setDescription(e.target.value);
     console.log(description);
+
   }
 
   const handleProjectUpdate = (e) => {
@@ -80,10 +85,14 @@ function TaskDialog(props) {
   }
   
   const handleDateUpdate = (e) => {
-    let tempDate = new Date(e.target.valueAsNumber);
-    let offset = tempDate.getTimezoneOffset() * 60 * 1000;
-    let newDate = new Date(e.target.valueAsNumber + offset);
-    setDueDate(newDate);
+    // let tempDate  = new Date(e.target.valueAsNumber);
+    // let offset    = tempDate.getTimezoneOffset() * 60 * 1000;
+    // let newDate   = new Date(e.target.valueAsNumber + offset)
+
+    let tempDate = e.target.value + " +0000";
+    let date = moment(tempDate, "YYYY-MM-DD Z");
+    console.log( date.utc() );
+    setDueDate(date);
   }
 
   const handleSubmit = (e) => {

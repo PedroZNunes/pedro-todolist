@@ -59,7 +59,8 @@ function LeftMenu(props) {
                 <Toolbar />
                 <MenuBody 
                     projects={props.projects} 
-                    handleProjectFilter={props.handleProjectFilter} 
+                    handleProjectFilter={props.handleProjectFilter}
+                    handleDateFilter={props.handleDateFilter}
                     handleAddProjectOpen={props.handleAddProjectOpen}
                     handleProjectDelete={props.handleProjectDelete}
                 />

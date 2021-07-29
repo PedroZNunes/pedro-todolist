@@ -9,6 +9,7 @@ import {
   CssBaseline
 } from '@material-ui/core';
 
+import moment from 'moment';
 
 import LeftMenu from './components/LeftMenu'
 import TopBar from './components/TopBar'
@@ -39,22 +40,7 @@ function App() {
   const onMenuOpen = () => setMenuOpen(true);
   const onMenuClose = () => setMenuOpen(false);
 
-  const filterTasks = (projectID) => {
-    console.log(`filtering by project id: ${projectID}`);
-    if (projectID === null) {
-      setTasksOnScreen(allTasks);
-      return;
-    }
-
-    let filteredTasks = [];
-    allTasks.forEach((task) => {
-      if (task.projectID === projectID) {
-        filteredTasks.push(task);
-      }
-    })
-    setTasksOnScreen(filteredTasks);
-    console.log(filteredTasks);
-  }
+  
   //#endregion
 
   //#region tasks
@@ -65,49 +51,49 @@ function App() {
       id: 0,
       description: "eat",
       projectID: 2,
-      date: new Date()
+      date: moment()
     },
     {
       id: 1,
       description: "sleep",
       projectID: 2,
-      date: new Date(2021, 9, 28)
+      date: moment("2021-1-28")
     },
     {
       id: 2,
       description: "take dog outside",
       projectID: 2,
-      date: new Date(2021, 7, 28)
+      date: moment("2021-3-28")
     },
     {
       id: 3,
       description: "get GC in RL",
       projectID: 0,
-      date: new Date(2021, 6, 28)
+      date: moment("2021-5-28")
     },
     {
       id: 4,
       description: "finish project",
       projectID: 1,
-      date: new Date(2021, 10, 28)
+      date: moment("2021-7-28")
     },
     {
       id: 5,
       description: "get a job",
       projectID: 1,
-      date: new Date(2021, 11, 28)
+      date: moment("2021-9-28")
     },
     {
       id: 6,
       description: "trip to TI",
       projectID: 0,
-      date: new Date(2021, 6, 20)
+      date: moment("2021-10-28")
     },
     {
       id: 7,
       description: "get decent chair",
       projectID: 0,
-      date: new Date(2021, 6, 19)
+      date: moment("2021-11-28")
     }
   ]);
 
@@ -127,7 +113,7 @@ function App() {
         id: newID,
         description: '',
         projectID: 0,
-        date: new Date()
+        date: moment()
       }
     }
     else {
@@ -142,7 +128,6 @@ function App() {
     setTaskDialogState(false);
     addOrUpdateTask(newTask);
   }
-
 
   const [taskToEdit, setTaskToEdit] = useState({ id: 0, description: null });
 
@@ -318,14 +303,50 @@ function App() {
   }
   //#endregion
 
+  //#region dates
+  const handleDateFilter = (finalDate) => {
+    setFinalDateOnScreen(finalDate)
+  }
+
+  
+  //#endregion
+
   //#region filter
   const [projectIDOnScreen, setProjectIDOnScreen] = useState(null);
+  const [finalDateOnScreen, setFinalDateOnScreen] = useState(null);
+  
   const [tasksOnScreen, setTasksOnScreen] = useState(allTasks);
 
   // update tasks on screen
   useEffect(() => {
-    filterTasks(projectIDOnScreen);
-  }, [allProjects, projectIDOnScreen, allTasks]);
+    filterTasks(projectIDOnScreen, finalDateOnScreen);
+  }, [allProjects, allTasks, projectIDOnScreen, finalDateOnScreen]);
+
+  const filterTasks = (projectID, dueDate) => {
+    console.log(`filtering by project id: ${projectID} and dates prior to: ${dueDate}`);
+    // if (projectID === null) {
+    if (projectID === null && dueDate === null) {
+      setTasksOnScreen(allTasks);
+      return;
+    }
+
+    let filteredTasks = [];
+    allTasks.forEach((task) => {
+      if (task.projectID === projectID || projectID === null) {
+        if( dueDate !== null ) {
+          if( moment(task.date).isSameOrBefore(dueDate)) {
+            filteredTasks.push(task);
+          }
+        } 
+        else {
+          filteredTasks.push(task);
+        }
+      }
+    })
+
+    setTasksOnScreen(filteredTasks);
+    console.log(filteredTasks);
+  }
 
   //#endregion
 
@@ -341,6 +362,7 @@ function App() {
           handleClose={onMenuClose}
           drawerWidth={drawerWidth}
           handleProjectFilter={handleProjectFilter}
+          handleDateFilter={handleDateFilter}
           handleProjectEdit={addOrUpdateProject}
           handleProjectDelete={handleProjectDelete}
           handleAddProjectOpen={handleProjectDialogOpen}
