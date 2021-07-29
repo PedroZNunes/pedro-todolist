@@ -51,10 +51,15 @@ function TaskDialog(props) {
 
   const [id, setID]                     = useState(props.task.id          ?? null);
 
-  const [dueDate, setDueDate]           = useState(props.task.date ?? moment());
-  
+  const [dueDate, setDueDate]           = useState(props.task.date        ?? null);
+
+  const [formattedDueDate, setFormattedDueDate] = useState(props.task.date        ?? null);
+
   const getDateToScreen = () => {
     //let newDate = dueDate.toLocaleDateString('ko-KR', {year: 'numeric', month: '2-digit', day: '2-digit'}).replaceAll('. ', '-').replaceAll('.', '')
+    if (dueDate === null){
+      return null;
+    }
     let newDate = dueDate.format("YYYY-MM-DD");
     return newDate;
   }
@@ -63,9 +68,19 @@ function TaskDialog(props) {
     setDescription(props.task.description ?? '');
     setProjectID(props.task.projectID ?? 0);
     setID(props.task.id         ?? null);
-    setDueDate(props.task.date  ?? moment())
-    console.log(props.task.date ?? moment())
+    setDueDate(props.task.date  ?? null);
   }, [props.isOpen])
+
+  // useEffect(() => {
+  //   if (dueDate !== null){
+
+  //     let date = dueDate.format("YYYY-MM-DD");
+  //     setFormattedDueDate(date)
+  //   }
+  //   else {
+  //     setFormattedDueDate(null);
+  //   }
+  // }, [dueDate])
 
 
   const handleDescriptionUpdate = (e) => {
@@ -88,11 +103,18 @@ function TaskDialog(props) {
     // let tempDate  = new Date(e.target.valueAsNumber);
     // let offset    = tempDate.getTimezoneOffset() * 60 * 1000;
     // let newDate   = new Date(e.target.valueAsNumber + offset)
-
-    let tempDate = e.target.value + " +0000";
-    let date = moment(tempDate, "YYYY-MM-DD Z");
-    console.log( date.utc() );
-    setDueDate(date);
+    let value = e.target.value;
+    if(e.target.valueAsDate === null){
+      setDueDate(null);
+      return;
+    }
+      
+    // let tempDate = value + " +0000";
+    // let date = moment(tempDate, "YYYY-MM-DD Z");
+    let date = moment.utc(value);
+    // date.utc();
+    // console.log(date.format("YYYY-MM-DD"));
+    setDueDate(date.format("YYYY-MM-DD"));
   }
 
   const handleSubmit = (e) => {
@@ -162,7 +184,7 @@ function TaskDialog(props) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={getDateToScreen()}
+            value={dueDate}
             onChange={e => handleDateUpdate(e)}
             onChangeRaw={(e) => e.preventDefault()}
           />

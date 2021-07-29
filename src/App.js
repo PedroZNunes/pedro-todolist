@@ -51,49 +51,49 @@ function App() {
       id: 0,
       description: "eat",
       projectID: 2,
-      date: moment()
+      date: null
     },
     {
       id: 1,
       description: "sleep",
       projectID: 2,
-      date: moment("2021-1-28")
+      date: "2021-01-28"
     },
     {
       id: 2,
       description: "take dog outside",
       projectID: 2,
-      date: moment("2021-3-28")
+      date: "2021-03-28"
     },
     {
       id: 3,
       description: "get GC in RL",
       projectID: 0,
-      date: moment("2021-5-28")
+      date: "2021-05-28"
     },
     {
       id: 4,
       description: "finish project",
       projectID: 1,
-      date: moment("2021-7-28")
+      date: "2021-07-28"
     },
     {
       id: 5,
       description: "get a job",
       projectID: 1,
-      date: moment("2021-9-28")
+      date: "2021-09-28"
     },
     {
       id: 6,
       description: "trip to TI",
       projectID: 0,
-      date: moment("2021-10-28")
+      date: "2021-10-28"
     },
     {
       id: 7,
       description: "get decent chair",
       projectID: 0,
-      date: moment("2021-11-28")
+      date: "2021-11-28"
     }
   ]);
 
@@ -113,7 +113,7 @@ function App() {
         id: newID,
         description: '',
         projectID: 0,
-        date: moment()
+        date: null
       }
     }
     else {
@@ -334,9 +334,14 @@ function App() {
     allTasks.forEach((task) => {
       if (task.projectID === projectID || projectID === null) {
         if( dueDate !== null ) {
+          if (task.date === null){
+            return;
+          }
+
           if( moment(task.date).isSameOrBefore(dueDate)) {
             filteredTasks.push(task);
           }
+
         } 
         else {
           filteredTasks.push(task);
