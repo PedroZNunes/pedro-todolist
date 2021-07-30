@@ -86,8 +86,8 @@ function MenuBody(props) {
 
     const filters = [
         { text: 'Inbox', icon: <InboxIcon />,       onClick: () => { props.handleProjectFilter(null); props.handleDateFilter(null) } },
-        { text: 'Today', icon: <TodayIcon />,       onClick: () => { props.handleDateFilter(moment()) } },
-        { text: 'Upcoming', icon: <UpcomingIcon />, onClick: () => { props.handleDateFilter(moment().add(7, 'd')) } }
+        { text: 'Today', icon: <TodayIcon />,       onClick: () => { props.handleDateFilter(moment().endOf('day')) } },
+        { text: 'This Week', icon: <UpcomingIcon />, onClick: () => { props.handleDateFilter(moment().endOf('week')) } }
     ]
 
     const [selectedProject, setSelectedProject] = React.useState({ });

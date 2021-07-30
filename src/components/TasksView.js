@@ -19,10 +19,24 @@ import {
     EditOutlined as EditIcon,
     CheckOutlined as CheckIcon,
     Delete as DeleteIcon,
-    MoreHoriz as MoreHorizIcon
+    MoreHoriz as MoreHorizIcon,
+    FiberManualRecord as ProjectColorIcon
 } from '@material-ui/icons';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
+    inline: {
+        paddingRight: theme.spacing(2)
+    },
+    inlineProject: {
+        marginRight: theme.spacing(2),
+        padding: '2px',
+        border: "1px solid",
+        borderRadius:"3px"
+    },
+    itemContent: {
+        flexGrow: 3
+    },
     grow: {
         flexGrow: 1
     }
@@ -76,6 +90,38 @@ function TasksView(props) {
         e.stopPropagation();
         setAnchorEl(null);
     };
+    console.log(`today ${moment().endOf('day').format("DD-MM-YYYY hh:mm")}`);
+    console.log(`tomorrow ${moment().endOf('day').add(1, 'd').format("DD-MM-YYYY hh:mm")}`);
+    console.log(`week ${moment().endOf('day').add(6, 'd').format("DD-MM-YYYY hh:mm")}`);
+
+    const getDateToScreen = (dateString) => {
+        let out = '';
+
+        if(dateString !== null){
+            let date = moment(dateString);
+            if (date.isSameOrAfter(moment())){
+                console.log(`date is ${date.format("DD-MM-YYYY hh:mm")}`)
+
+
+                let a = date.isSameOrBefore(moment().endOf('day'));
+                if(date.isSameOrBefore(moment().endOf('day'))){
+                    out = "Today";
+                } 
+                else if (date.isSameOrBefore(moment().endOf('day').add(1, 'd'))) {
+                    out= 'Tomorrow';
+                }
+                else if (date.isSameOrBefore(moment().add(6, 'd'))){
+                    out = date.format('dddd');
+                } 
+                else {
+                    out= date.format('MMM Do YYYY');
+                }
+
+            }
+            // date.toLocaleString();
+        }
+        return out;
+    }
 
     return (
         <div className="today_view" style={{
@@ -103,12 +149,50 @@ function TasksView(props) {
                             >
                                 <CheckIcon color="primary" />
                             </IconButton>
+                            <div className={classes.itemContent}>
+                                
                             <ListItemText
-                                primary={task.description}
-                                secondary={props.projects.find(project => project.id === task.projectID)?.name}
-                            />
+                                primary={
+                                    <React.Fragment>
 
-                            <div className={classes.grow} />
+                                    <Typography
+                                        component="span"
+                                        variant="body1"
+                                        className={classes.inline}
+                                        color="textPrimary"
+                                    >
+                                        {task.description}
+                                    </Typography>
+                                    </React.Fragment>
+                                }
+                                    
+                                secondary={
+                                    <React.Fragment>
+
+                                    
+                                    <Typography
+                                        component="span"
+                                        variant="caption"
+                                        className={classes.inlineProject}
+                                        style={{borderColor:  props.projects.find(project => project.id === task.projectID)?.color}}
+                                        color="textPrimary"
+                                    >
+                                        {props.projects.find(project => project.id === task.projectID)?.name}
+                                    </Typography>
+
+                                    <Typography
+                                        component="span"
+                                        variant="caption"
+                                        className={classes.inline}
+                                        color="textSecondary"
+                                    >
+                                        {getDateToScreen(task.date)}
+                                    </Typography>
+
+                                    </React.Fragment>
+                                }
+                            />
+                            </div>
                             
                             <IconButton
                                 aria-label="more"

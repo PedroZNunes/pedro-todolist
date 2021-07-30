@@ -111,7 +111,7 @@ function TaskDialog(props) {
       
     // let tempDate = value + " +0000";
     // let date = moment(tempDate, "YYYY-MM-DD Z");
-    let date = moment.utc(value);
+    let date = moment(value).endOf('day');
     // date.utc();
     // console.log(date.format("YYYY-MM-DD"));
     setDueDate(date.format("YYYY-MM-DD"));

@@ -57,43 +57,43 @@ function App() {
       id: 1,
       description: "sleep",
       projectID: 2,
-      date: "2021-01-28"
+      date: moment().endOf('day')
     },
     {
       id: 2,
       description: "take dog outside",
       projectID: 2,
-      date: "2021-03-28"
+      date: moment().endOf('day').add(1, 'd')
     },
     {
       id: 3,
       description: "get GC in RL",
       projectID: 0,
-      date: "2021-05-28"
+      date: moment().endOf('day').add(3, 'd')
     },
     {
       id: 4,
       description: "finish project",
       projectID: 1,
-      date: "2021-07-28"
+      date: moment().endOf('day').add(5, 'd')
     },
     {
       id: 5,
       description: "get a job",
       projectID: 1,
-      date: "2021-09-28"
+      date: moment().endOf('day').add(7, 'd')
     },
     {
       id: 6,
       description: "trip to TI",
       projectID: 0,
-      date: "2021-10-28"
+      date: moment().endOf('day').add(9, 'd')
     },
     {
       id: 7,
       description: "get decent chair",
       projectID: 0,
-      date: "2021-11-28"
+      date: moment().endOf('day').add(11, 'd')
     }
   ]);
 
@@ -191,17 +191,17 @@ function App() {
     {
       id: 0,
       name: 'Alpha',
-      color: '#aa0000'
+      color: 'red'
     },
     {
       id: 1,
       name: 'Phoenix',
-      color: '#a4a4a4'
+      color: 'yellow'
     },
     {
       id: 2,
       name: 'House',
-      color: '#cc33cc'
+      color: 'green'
     }
   ]);
 
@@ -338,7 +338,7 @@ function App() {
             return;
           }
 
-          if( moment(task.date).isSameOrBefore(dueDate)) {
+          if( moment(task.date).isSameOrBefore(dueDate) && moment(task.date).isAfter(moment()) ) {
             filteredTasks.push(task);
           }
 
