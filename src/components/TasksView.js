@@ -7,7 +7,7 @@ import {
     ListItem,
     ListItemText,
     IconButton,
-    Collapse, Menu, MenuItem
+    Menu, MenuItem,
 
 } from '@material-ui/core';
 
@@ -20,7 +20,8 @@ import {
     CheckOutlined as CheckIcon,
     Delete as DeleteIcon,
     MoreHoriz as MoreHorizIcon,
-    FiberManualRecord as ProjectColorIcon
+    FiberManualRecord as ProjectColorIcon,
+    Add as AddIcon
 } from '@material-ui/icons';
 import moment from 'moment';
 
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
         padding: '2px',
         border: "1px solid",
-        borderRadius:"3px"
+        borderRadius: "3px"
     },
     itemContent: {
         flexGrow: 3
@@ -72,13 +73,13 @@ function TasksView(props) {
         e.stopPropagation();
         props.handleTaskDialogOpen(selectedTask);
         setAnchorEl(null);
-    }
+    };
 
     const handleDeleteClick = (e) => {
         e.stopPropagation();
         props.onTaskDone(selectedTask, false);
         setAnchorEl(null);
-    }
+    };
 
     const handleTaskSubMenuClick = (e, task) => {
         e.stopPropagation();
@@ -90,6 +91,7 @@ function TasksView(props) {
         e.stopPropagation();
         setAnchorEl(null);
     };
+    
     console.log(`today ${moment().endOf('day').format("DD-MM-YYYY hh:mm")}`);
     console.log(`tomorrow ${moment().endOf('day').add(1, 'd').format("DD-MM-YYYY hh:mm")}`);
     console.log(`week ${moment().endOf('day').add(6, 'd').format("DD-MM-YYYY hh:mm")}`);
@@ -102,23 +104,22 @@ function TasksView(props) {
             if (date.isSameOrAfter(moment())){
                 console.log(`date is ${date.format("DD-MM-YYYY hh:mm")}`)
 
-
                 let a = date.isSameOrBefore(moment().endOf('day'));
                 if(date.isSameOrBefore(moment().endOf('day'))){
                     out = "Today";
                 } 
                 else if (date.isSameOrBefore(moment().endOf('day').add(1, 'd'))) {
-                    out= 'Tomorrow';
+                    out = 'Tomorrow';
                 }
                 else if (date.isSameOrBefore(moment().add(6, 'd'))){
                     out = date.format('dddd');
                 } 
                 else {
-                    out= date.format('MMM Do YYYY');
+                    out = date.format('MMM Do YYYY');
                 }
 
             }
-            // date.toLocaleString();
+
         }
         return out;
     }
@@ -163,12 +164,12 @@ function TasksView(props) {
                                     >
                                         {task.description}
                                     </Typography>
+
                                     </React.Fragment>
                                 }
                                     
                                 secondary={
                                     <React.Fragment>
-
                                     
                                     <Typography
                                         component="span"
@@ -205,6 +206,12 @@ function TasksView(props) {
                         </ListItem>
 
                     ))}
+                    {/* add button at the end of the list */}
+                    <ListItem>
+                        <IconButton className={classes.grow} onClick={() => props.handleTaskDialogOpen(null)}>
+                            <AddIcon color="secondary"/>
+                        </IconButton>
+                    </ListItem>
                 </List>
                 <Menu
                     anchorEl={anchorEl}

@@ -68,7 +68,13 @@ function TaskDialog(props) {
     setDescription(props.task.description ?? '');
     setProjectID(props.task.projectID ?? 0);
     setID(props.task.id         ?? null);
-    setDueDate(props.task.date  ?? null);
+    let date;
+    if (props.task.date !== null){
+      date = moment(props.task.date).format("YYYY-MM-DD");
+    } else {
+      date = null
+    }
+    setDueDate(date  ?? null);
   }, [props.isOpen])
 
   // useEffect(() => {
@@ -175,19 +181,19 @@ function TaskDialog(props) {
             </Select>
           </FormControl>
           <FormControl required className={classes.formControl} style={{maxWidth: '188px'}}>
-          <TextField
-            id="date"
-            variant="outlined"
-            label="Due"
-            type="date"
-            // className={classes.textField}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={dueDate}
-            onChange={e => handleDateUpdate(e)}
-            onChangeRaw={(e) => e.preventDefault()}
-          />
+            <TextField
+              id="date"
+              variant="outlined"
+              label="Due"
+              type="date"
+              // className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={dueDate}
+              onChange={e => handleDateUpdate(e)}
+              onChangeRaw={(e) => e.preventDefault()}
+            />
           </FormControl>
 
         </DialogContent>

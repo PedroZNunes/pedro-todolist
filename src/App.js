@@ -40,7 +40,7 @@ function App() {
   const onMenuOpen = () => setMenuOpen(true);
   const onMenuClose = () => setMenuOpen(false);
 
-  
+
   //#endregion
 
   //#region tasks
@@ -98,6 +98,7 @@ function App() {
   ]);
 
   const [taskDialogState, setTaskDialogState] = useState(false);
+
 
   const handleTaskDialogOpen = (task) => {
     let outTask;
@@ -308,13 +309,13 @@ function App() {
     setFinalDateOnScreen(finalDate)
   }
 
-  
+
   //#endregion
 
   //#region filter
   const [projectIDOnScreen, setProjectIDOnScreen] = useState(null);
   const [finalDateOnScreen, setFinalDateOnScreen] = useState(null);
-  
+
   const [tasksOnScreen, setTasksOnScreen] = useState(allTasks);
 
   // update tasks on screen
@@ -333,22 +334,30 @@ function App() {
     let filteredTasks = [];
     allTasks.forEach((task) => {
       if (task.projectID === projectID || projectID === null) {
-        if( dueDate !== null ) {
-          if (task.date === null){
+        if (dueDate !== null) {
+          if (task.date === null) {
             return;
           }
 
-          if( moment(task.date).isSameOrBefore(dueDate) && moment(task.date).isAfter(moment()) ) {
+          if (moment(task.date).isSameOrBefore(dueDate) && moment(task.date).isAfter(moment())) {
             filteredTasks.push(task);
           }
-
-        } 
+        }
         else {
           filteredTasks.push(task);
         }
       }
     })
 
+    if (dueDate !== null) {
+      filteredTasks.sort((a, b) => {
+        if (moment(a.date).isBefore(moment(b.date))) {
+          return -1;
+        } else {
+          return 1;
+        }
+      })
+    }
     setTasksOnScreen(filteredTasks);
     console.log(filteredTasks);
   }
@@ -356,46 +365,46 @@ function App() {
   //#endregion
 
   return (
-      <div className={classes.root}>
-        <CssBaseline />
-        <TopBar
-          onOpenMenu={onMenuOpen}
-          handleAddTaskOpen={handleTaskDialogOpen}
-        />
-        <LeftMenu
-          isOpen={menuOpen}
-          handleClose={onMenuClose}
-          drawerWidth={drawerWidth}
-          handleProjectFilter={handleProjectFilter}
-          handleDateFilter={handleDateFilter}
-          handleProjectEdit={addOrUpdateProject}
-          handleProjectDelete={handleProjectDelete}
-          handleAddProjectOpen={handleProjectDialogOpen}
-          projects={allProjects}
-        />
-        <Content
-          tasks={tasksOnScreen}
-          handleTaskDialogOpen={handleTaskDialogOpen}
-          onTaskDone={onTaskDone}
-          projects={allProjects}
-          className={classes.content}
-        />
+    <div className={classes.root}>
+      <CssBaseline />
+      <TopBar
+        onOpenMenu={onMenuOpen}
+        handleAddTaskOpen={handleTaskDialogOpen}
+      />
+      <LeftMenu
+        isOpen={menuOpen}
+        handleClose={onMenuClose}
+        drawerWidth={drawerWidth}
+        handleProjectFilter={handleProjectFilter}
+        handleDateFilter={handleDateFilter}
+        handleProjectEdit={addOrUpdateProject}
+        handleProjectDelete={handleProjectDelete}
+        handleAddProjectOpen={handleProjectDialogOpen}
+        projects={allProjects}
+      />
+      <Content
+        tasks={tasksOnScreen}
+        handleTaskDialogOpen={handleTaskDialogOpen}
+        onTaskDone={onTaskDone}
+        projects={allProjects}
+        className={classes.content}
+      />
 
-        <TaskDialog
-          isOpen={taskDialogState}
-          handleClosing={handleTaskDialogClose}
-          projects={allProjects}
-          task={taskToEdit}
-        />
+      <TaskDialog
+        isOpen={taskDialogState}
+        handleClosing={handleTaskDialogClose}
+        projects={allProjects}
+        task={taskToEdit}
+      />
 
-        <ProjectDialog
-          isOpen={projectDialogState}
-          handleClosing={handleProjectDialogClose}
-          projects={allProjects}
-          project={projectToEdit}
-        />
+      <ProjectDialog
+        isOpen={projectDialogState}
+        handleClosing={handleProjectDialogClose}
+        projects={allProjects}
+        project={projectToEdit}
+      />
 
-      </div>
+    </div>
   );
 }
 
