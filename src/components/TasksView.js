@@ -7,7 +7,8 @@ import {
     ListItem,
     ListItemText,
     IconButton,
-    Menu, MenuItem,
+    Menu, MenuItem,ListItemIcon
+
 
 } from '@material-ui/core';
 
@@ -207,10 +208,10 @@ function TasksView(props) {
 
                     ))}
                     {/* add button at the end of the list */}
-                    <ListItem>
-                        <IconButton className={classes.grow} onClick={() => props.handleTaskDialogOpen(null)}>
-                            <AddIcon color="secondary"/>
-                        </IconButton>
+                    <ListItem button onClick={() => props.handleTaskDialogOpen(null)}>
+                        <ListItemIcon className={classes.grow} >
+                            <AddIcon className={classes.grow} color="secondary"/>
+                        </ListItemIcon>
                     </ListItem>
                 </List>
                 <Menu
