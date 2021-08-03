@@ -102,10 +102,9 @@ function TasksView(props) {
 
         if(dateString !== null){
             let date = moment(dateString);
-            if (date.isSameOrAfter(moment())){
+            if (date.isSameOrAfter(moment().startOf('day'))){
                 console.log(`date is ${date.format("DD-MM-YYYY hh:mm")}`)
 
-                let a = date.isSameOrBefore(moment().endOf('day'));
                 if(date.isSameOrBefore(moment().endOf('day'))){
                     out = "Today";
                 } 

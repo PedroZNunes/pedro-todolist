@@ -301,11 +301,13 @@ function App() {
 
   const handleProjectFilter = (projectID) => {
     setProjectIDOnScreen(projectID)
+    setFinalDateOnScreen(null)
   }
   //#endregion
 
   //#region dates
   const handleDateFilter = (finalDate) => {
+    setProjectIDOnScreen(null)
     setFinalDateOnScreen(finalDate)
   }
 
