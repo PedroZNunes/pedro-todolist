@@ -49,49 +49,49 @@ function App() {
   const [allTasks, setAllTasks] = useState([
     {
       id: 0,
-      description: "eat",
+      description: "Eat",
       projectID: 2,
       date: null
     },
     {
       id: 1,
-      description: "sleep",
+      description: "Sleep",
       projectID: 2,
       date: moment().endOf('day')
     },
     {
       id: 2,
-      description: "take dog outside",
+      description: "Take the dogs outside",
       projectID: 2,
       date: moment().endOf('day').add(1, 'd')
     },
     {
       id: 3,
-      description: "get GC in RL",
+      description: "Move out",
       projectID: 0,
       date: moment().endOf('day').add(3, 'd')
     },
     {
       id: 4,
-      description: "finish project",
+      description: "Finish the project",
       projectID: 1,
       date: moment().endOf('day').add(5, 'd')
     },
     {
       id: 5,
-      description: "get a job",
+      description: "Get a job",
       projectID: 1,
       date: moment().endOf('day').add(7, 'd')
     },
     {
       id: 6,
-      description: "trip to TI",
+      description: "Travel to TI",
       projectID: 0,
       date: moment().endOf('day').add(9, 'd')
     },
     {
       id: 7,
-      description: "get decent chair",
+      description: "Get a decent chair",
       projectID: 0,
       date: moment().endOf('day').add(11, 'd')
     }

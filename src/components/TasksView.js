@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
     itemContent: {
         flexGrow: 3
     },
+    addButton: {
+        flexGrow: 1,
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(1)
+    },
     grow: {
         flexGrow: 1
     }
@@ -207,9 +212,9 @@ function TasksView(props) {
 
                     ))}
                     {/* add button at the end of the list */}
-                    <ListItem button onClick={() => props.handleTaskDialogOpen(null)}>
-                        <ListItemIcon className={classes.grow} >
-                            <AddIcon className={classes.grow} color="secondary"/>
+                    <ListItem button onClick={() => props.handleTaskDialogOpen(null)} >
+                        <ListItemIcon className={classes.addButton} >
+                            <AddIcon className={classes.grow} color="secondary" />
                         </ListItemIcon>
                     </ListItem>
                 </List>

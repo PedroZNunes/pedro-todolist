@@ -103,7 +103,6 @@ function MenuBody(props) {
     const handleProjectSubMenuClose = (e) => {
         e.stopPropagation();
         setAnchorEl(null);
-        // setSelectedProject({});
     };
 
 
@@ -111,6 +110,7 @@ function MenuBody(props) {
     return (
         <div id="list_holder" style={{ backgroundColor: "#eee", height: "100vh", paddingTop: theme.spacing(1), overflow: 'auto' }}>
             <List className={classes.list}>
+                
                 {filters?.map((filter) => (
                     <ListItem divider={false} button className={classes.listItem} onClick={filter.onClick}>
                         <IconButton
@@ -168,18 +168,16 @@ function MenuBody(props) {
                             onClick={(e) => props.handleAddProjectOpen(e, null)}
                             button
                         >
-                        <div className={classes.grow} />
+                            <div className={classes.grow} />
 
-                        <Icon size='small' >
-                            <AddIcon />
-                        </Icon>
-                        <div className={classes.grow} />
+                            <Icon size='small' >
+                                <AddIcon />
+                            </Icon >
+                            <div className={classes.grow} />
 
                         </ListItem>
                     </List>
                 </Collapse>
-
-
 
             </List>
 
