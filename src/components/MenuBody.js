@@ -4,6 +4,9 @@ import { useTheme } from '@material-ui/core/styles';
 
 import { makeStyles } from '@material-ui/core/styles';
 
+import moment from 'moment';
+
+
 import {
     Inbox as InboxIcon,
     Today as TodayIcon,
@@ -82,9 +85,9 @@ function MenuBody(props) {
     const projects = props.projects;
 
     const filters = [
-        { text: 'Inbox', icon: <InboxIcon />, onClick: () => props.handleProjectFilter(null) },
-        { text: 'Today', icon: <TodayIcon />, onClick: () => { } },
-        { text: 'Upcoming', icon: <UpcomingIcon />, onClick: () => { } }
+        { text: 'Inbox', icon: <InboxIcon />,       onClick: () => { props.handleProjectFilter(null); props.handleDateFilter(null) } },
+        { text: 'Today', icon: <TodayIcon />,       onClick: () => { props.handleDateFilter(moment().endOf('day')) } },
+        { text: 'This Week', icon: <UpcomingIcon />, onClick: () => { props.handleDateFilter(moment().endOf('week')) } }
     ]
 
     const [selectedProject, setSelectedProject] = React.useState({ });
