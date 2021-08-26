@@ -9,6 +9,10 @@ import {
   Container
 } from '@material-ui/core';
 
+import { AuthProvider } from "../contexts/AuthContext"
+
+// import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
+
 import moment from 'moment';
 
 import LeftMenu from './LeftMenu'
@@ -36,7 +40,7 @@ const useStyles = makeStyles(() => ({
   signuproot: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '30%'
+    marginTop: '100px'
 
   },
   content: {
@@ -418,10 +422,11 @@ function App() {
 
   return (
     <div className={classes.signuproot}>
-      <Container maxWidth="sm">
-         <Signup />
-      </Container>
-
+      <AuthProvider>
+        <Container maxWidth="sm">
+          <Signup />
+        </Container>
+      </AuthProvider>
     </div>
   //   <div className={classes.root}>
   //     <CssBaseline />

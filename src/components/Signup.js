@@ -9,15 +9,16 @@ import {
   FormControl,
   makeStyles,
   CardHeader,
-  ThemeProvider
+  Popover
 } from '@material-ui/core'
 
+
+import { useAuth } from '../contexts/AuthContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingBottom: theme.spacing(2),
     paddingTop: theme.spacing(2),
-
   },
   password: {
     marginTop: theme.spacing(2)
@@ -34,23 +35,61 @@ export default function Signup(props) {
 
   const classes = useStyles();
 
-  const [username, setUsername] = useState();
+  const { currentUser, signup } = useAuth();
+  
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [passwordConfirm, setPasswordConfirm] = useState();
 
-  const [userErrorText, setUserErrorText] = useState("");
+  const [emailErrorText, setUserErrorText] = useState("");
   const [passwordErrorText, setPasswordErrorText] = useState("");
   const [passwordConfirmErrorText, setPasswordConfirmErrorText] = useState("");
 
+  const isEmailValid = (email) => {
 
-  const handleUsernameUpdate = (e) => {
-    if (e.target.value.length < 4) {
-      promptUsernameError("* must have at least 4 characters")
+    let isValid = true;
+    if (email === undefined)
+      return false
+    
+    if (email === null)
+      return false
+
+
+    if ( !email.includes("@")){
+      isValid = false;
+    } 
+    else {
+      let splits = email.split('@');
+  
+      if (splits.length !== 2){
+        isValid = false;
+      }
+      else{
+        if (splits[0].length <= 2)
+          isValid = false;
+        
+        if(!splits[1].includes("."))
+          isValid = false;
+
+        if (splits[1].length < 5)
+          isValid = false;
+      }
+    }
+
+    return isValid
+  }
+
+  const handleEmailUpdate = (e) => {
+    if (! isEmailValid(e.target.value)) {
+      promptEmailError("* must be a valid email")
     }
     else {
-      promptUsernameError("");
+      promptEmailError("");
     }
-    setUsername(e.target.value);
+    setEmail(e.target.value);
   }
 
   const handlePasswordUpdate = (e) => {
@@ -64,16 +103,10 @@ export default function Signup(props) {
   }
 
   const handlePasswordConfirmUpdate = (e) => {
-    if (e.target.value.length < 6) {
-      promptPasswordConfirmError("* must have at least 6 characters")
-    }
-    else {
-      promptPasswordConfirmError("")
-    }
     setPasswordConfirm(e.target.value);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // if (username.already in firebase) {
     //   promptUsernameError("username already exists");
@@ -81,8 +114,9 @@ export default function Signup(props) {
     //  setPasswordConfirm("");
     // }
     let isValid = true;
-    if (username.length < 4) {
-      promptUsernameError("* must have at least 4 characters")
+
+    if (email.length < 4) {
+      promptEmailError("* must have at least 4 characters")
       isValid = false;
     }
 
@@ -97,13 +131,23 @@ export default function Signup(props) {
     }
 
     if(isValid) {
-      //submit stuff to firebase db
-      console.log("submit stuff to firebase db")
+      try {
+        setError('');
+        setLoading(true);
+
+        await signup(email, password)
+      } 
+      catch {
+        setError('Failed to create and account');
+      }
+
+      setLoading(false);
+
     }
   }
 
   
-  const promptUsernameError = (message) => {
+  const promptEmailError = (message) => {
     setUserErrorText(message)
   }
 
@@ -119,6 +163,8 @@ export default function Signup(props) {
   return (
     <Card aria-labelledby="form-dialog-title" maxWidth="xs" className={classes.root} fullWidth >
       <CardHeader title="Sign Up" className={classes.title} />
+      {JSON.stringify(currentUser)}
+      {error && <Popover variant="danger"> {error} </Popover>}
       <form onSubmit={handleSubmit}>
         <CardContent >
           <FormControl required fullWidth>
@@ -126,13 +172,13 @@ export default function Signup(props) {
               required
               autoFocus
               autoComplete="false"
-              id="username"
-              label="Username"
+              id="email"
+              label="Email"
               variant="outlined"
-              value={username}
-              error={(userErrorText === "" ? false : true )}
-              helperText={userErrorText}
-              onChange={e => handleUsernameUpdate(e)}
+              value={email}
+              error={(emailErrorText === "" ? false : true )}
+              helperText={emailErrorText}
+              onChange={e => handleEmailUpdate(e)}
             />
           </FormControl>
         </CardContent>
@@ -175,7 +221,7 @@ export default function Signup(props) {
         </CardContent>
 
         <CardActions className={classes.button}>
-          <Button type="submit" color="primary" size="large" variant="contained" >
+          <Button disabled={loading} type="submit" color="primary" size="large" variant="contained" >
             Sign Up
           </Button>
         </CardActions>
