@@ -1,4 +1,3 @@
-import './App.css';
 
 import React, { useEffect } from 'react';
 import { useState } from 'react';
@@ -6,16 +5,24 @@ import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import {
-  CssBaseline
+  CssBaseline,
+  Container
 } from '@material-ui/core';
 
 import moment from 'moment';
 
-import LeftMenu from './components/LeftMenu'
-import TopBar from './components/TopBar'
-import Content from './components/Content';
-import TaskDialog from './components/TaskDialog';
-import ProjectDialog from './components/ProjectDialog';
+import LeftMenu from './LeftMenu'
+import TopBar from './TopBar'
+import Content from './Content';
+import TaskDialog from './TaskDialog';
+import ProjectDialog from './ProjectDialog';
+import Signup from './Signup';
+
+import firebase from "firebase/app";
+
+import "firebase/auth";
+import "firebase/firestore";
+
 
 const drawerWidth = 240;
 
@@ -26,14 +33,27 @@ const useStyles = makeStyles(() => ({
     height: 'fit-content'
 
   },
+  signuproot: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '30%'
+
+  },
   content: {
     height: 'fit-content'
+  },
+  grow: {
+    flexGrow: 1
   }
 }));
 
 
 function App() {
   const classes = useStyles();
+  //#region login auth
+
+
+    //#endregion
 
   //#region menu
   const [menuOpen, setMenuOpen] = useState(false);
@@ -96,6 +116,28 @@ function App() {
       date: moment().endOf('day').add(11, 'd')
     }
   ]);
+
+
+  // //run on launch. get all tasks for user
+  // useEffect(() => {
+  //   getTasks();
+  // }, []);
+
+  // const getTasks = () => {
+  //   db.collection("tasks").onSnapshot((query) => {
+  //     setAllTasks(
+  //       query.docs.map((doc) => {
+  //       let data = (doc.data();
+  //       return {
+  //         id: doc.id,
+  //         description :doc.data().description,
+  //         projectID: doc.data().projectID,
+  //         date: doc.data().dueDate,
+  //         createdIn: doc.data().createdIn
+  //       }
+  //     })
+  //   );
+  // });
 
   const [taskDialogState, setTaskDialogState] = useState(false);
 
@@ -161,6 +203,14 @@ function App() {
       setAllTasks(joined);
       console.log(joined);
     }
+
+    //add using firebase
+    // if ( newTask.isNew === true) {
+      // db.collection("tasks").add(newTask);
+      
+    // }
+
+
     // edit
     else {
       let tempTasks = [...allTasks];
@@ -367,46 +417,52 @@ function App() {
   //#endregion
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <TopBar
-        onOpenMenu={onMenuOpen}
-        handleAddTaskOpen={handleTaskDialogOpen}
-      />
-      <LeftMenu
-        isOpen={menuOpen}
-        handleClose={onMenuClose}
-        drawerWidth={drawerWidth}
-        handleProjectFilter={handleProjectFilter}
-        handleDateFilter={handleDateFilter}
-        handleProjectEdit={addOrUpdateProject}
-        handleProjectDelete={handleProjectDelete}
-        handleAddProjectOpen={handleProjectDialogOpen}
-        projects={allProjects}
-      />
-      <Content
-        tasks={tasksOnScreen}
-        handleTaskDialogOpen={handleTaskDialogOpen}
-        onTaskDone={onTaskDone}
-        projects={allProjects}
-        className={classes.content}
-      />
-
-      <TaskDialog
-        isOpen={taskDialogState}
-        handleClosing={handleTaskDialogClose}
-        projects={allProjects}
-        task={taskToEdit}
-      />
-
-      <ProjectDialog
-        isOpen={projectDialogState}
-        handleClosing={handleProjectDialogClose}
-        projects={allProjects}
-        project={projectToEdit}
-      />
+    <div className={classes.signuproot}>
+      <Container maxWidth="sm">
+         <Signup />
+      </Container>
 
     </div>
+  //   <div className={classes.root}>
+  //     <CssBaseline />
+  //     <TopBar
+  //       onOpenMenu={onMenuOpen}
+  //       handleAddTaskOpen={handleTaskDialogOpen}
+  //     />
+  //     <LeftMenu
+  //       isOpen={menuOpen}
+  //       handleClose={onMenuClose}
+  //       drawerWidth={drawerWidth}
+  //       handleProjectFilter={handleProjectFilter}
+  //       handleDateFilter={handleDateFilter}
+  //       handleProjectEdit={addOrUpdateProject}
+  //       handleProjectDelete={handleProjectDelete}
+  //       handleAddProjectOpen={handleProjectDialogOpen}
+  //       projects={allProjects}
+  //     />
+  //     <Content
+  //       tasks={tasksOnScreen}
+  //       handleTaskDialogOpen={handleTaskDialogOpen}
+  //       onTaskDone={onTaskDone}
+  //       projects={allProjects}
+  //       className={classes.content}
+  //     />
+
+  //     <TaskDialog
+  //       isOpen={taskDialogState}
+  //       handleClosing={handleTaskDialogClose}
+  //       projects={allProjects}
+  //       task={taskToEdit}
+  //     />
+
+  //     <ProjectDialog
+  //       isOpen={projectDialogState}
+  //       handleClosing={handleProjectDialogClose}
+  //       projects={allProjects}
+  //       project={projectToEdit}
+  //     />
+
+  //  </div>
   );
 }
 
