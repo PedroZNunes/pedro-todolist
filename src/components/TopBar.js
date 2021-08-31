@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
 import {
     AppBar,
+    Button,
     IconButton,
-    Toolbar
+    Toolbar,
+    Typography
 } from '@material-ui/core'
 
 import {
@@ -13,7 +15,9 @@ import {
     Add as AddIcon
 } from '@material-ui/icons'
 
+import { useAuth } from '../contexts/AuthContext';
 
+import { Link, useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -24,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
-    grow:{
+    grow: {
         flexGrow: 1
     }
 }));
@@ -34,17 +38,43 @@ const useStyles = makeStyles((theme) => ({
 function TopBar(props) {
 
     const classes = useStyles();
+    const { currentUser, logout } = useAuth();
 
+    const [error, setError] = useState();
+
+    const history = useHistory();
+
+    const handleLogout = async () => {
+        setError('');
+        try{
+            await logout();
+            history.push("/login");
+        } 
+        catch{
+            setError('Failed to log out');
+        }
+    }
     return (
         <AppBar color="primary" className={classes.appBar}>
             <Toolbar>
-            <IconButton onClick={props.onOpenMenu} className={classes.menuButton}>
-                <MenuIcon />
-            </IconButton>
-            <div className={classes.grow} />
-            <IconButton onClick={() => props.handleAddTaskOpen(null)}>
-                <AddIcon />
-            </IconButton>
+                <Typography variant="subtitle"> {currentUser.email} </Typography>
+                <Link to="/update-profile" style={{ textDecoration: 'none' }}>
+                    <Button>
+                        Update Profile
+                    </Button>
+                </Link>
+
+                    <Button onClick={handleLogout}>
+                        Logout
+                    </Button>
+                
+                <IconButton onClick={props.onOpenMenu} className={classes.menuButton}>
+                    <MenuIcon />
+                </IconButton>
+                <div className={classes.grow} />
+                <IconButton onClick={() => props.handleAddTaskOpen(null)}>
+                    <AddIcon />
+                </IconButton>
             </Toolbar>
         </AppBar>
     );
