@@ -19,7 +19,7 @@ export default function App() {
                     <PrivateRoute exact path="/" component={Main} />
                     <Route path="/signup" component={Signup} />
                     <Route path="/login" component={Login} />
-                    <Route path="/update-user" component={UpdateUser} />
+                    <Route path="/update-profile" component={UpdateUser} />
                     <Route path="/forgot-password" component={ForgotPassword} />
 
                 </Switch>

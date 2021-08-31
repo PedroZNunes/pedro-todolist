@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -40,24 +40,16 @@ function TopBar(props) {
     const classes = useStyles();
     const { currentUser, logout } = useAuth();
 
-    const [error, setError] = useState();
-
     const history = useHistory();
 
     const handleLogout = async () => {
-        setError('');
-        try{
-            await logout();
-            history.push("/login");
-        } 
-        catch{
-            setError('Failed to log out');
-        }
+        await logout();
+        history.push("/login");
     }
     return (
         <AppBar color="primary" className={classes.appBar}>
             <Toolbar>
-                <Typography variant="subtitle"> {currentUser.email} </Typography>
+                <Typography variant="subtitle"> {currentUser.displayName} </Typography>
                 <Link to="/update-profile" style={{ textDecoration: 'none' }}>
                     <Button>
                         Update Profile

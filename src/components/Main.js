@@ -19,12 +19,9 @@ import TaskDialog from './TaskDialog';
 import ProjectDialog from './ProjectDialog';
 // import Signup from './Signup';
 
-import firebase from "firebase/app";
 
 import "firebase/auth";
 import "firebase/firestore";
-import { useHistory } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 
 const drawerWidth = 240;
 

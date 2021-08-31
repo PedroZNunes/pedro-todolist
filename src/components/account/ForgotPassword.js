@@ -16,7 +16,10 @@ import {
 import Alert from '@material-ui/lab/Alert'
 
 import { useAuth } from '../../contexts/AuthContext'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
+
+import {Link as MaterialLink} from '@material-ui/core'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -110,7 +113,7 @@ export default function ForgotPassword(props) {
             try {
                 setError('');
                 setLoading(true);
-                setMessage("An email has been sent to your inbox with instructions to resetting your password.")
+                setMessage("An email has been sent to your inbox with instructions for resetting your password.")
 
                 await resetPassword(email);
             }
@@ -161,7 +164,7 @@ export default function ForgotPassword(props) {
                 <br />
                 <CardActions className={classes.button}>
                     <Typography variant="subtitle1">
-                        <Link to="/login" style={{ textDecoration: 'none' }}>Log In</Link>
+                        <MaterialLink component={RouterLink} to="/login" style={{ textDecoration: 'none' }}>Log In</MaterialLink>
                     </Typography>
                 </CardActions>
 

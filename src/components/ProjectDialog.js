@@ -8,8 +8,6 @@ import {
   Button,
   makeStyles,
   FormControl,
-  MenuItem,
-  Select
 } from '@material-ui/core'
 
 import { ColorPalette } from 'material-ui-color';
@@ -57,7 +55,7 @@ function ProjectDialog(props) {
     setID(props.project.id);
     setName(props.project.name);
     setColor(props.project.color);
-  }, [props.isOpen])
+  }, [props.isOpen, props.project.color, props.project.id, props.project.name])
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -17,11 +17,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 
 import {
-    EditOutlined as EditIcon,
     CheckOutlined as CheckIcon,
-    Delete as DeleteIcon,
     MoreHoriz as MoreHorizIcon,
-    FiberManualRecord as ProjectColorIcon,
     Add as AddIcon
 } from '@material-ui/icons';
 import moment from 'moment';
@@ -53,22 +50,22 @@ function TasksView(props) {
     const theme = useTheme();
     const classes = useStyles(props);
 
-    const taskMenuOptions = [
-        {
-            title: 'Edit',
-            onClick: (task) => {
-                props.handleTaskDialogOpen(task);
-                setAnchorEl(null)
-            }
-        },
-        {
-            title: 'Delete',
-            onClick: (task) => {
-                props.onTaskDone(task, false)
-                setAnchorEl(null)
-            }
-        }
-    ];
+    // const taskMenuOptions = [
+    //     {
+    //         title: 'Edit',
+    //         onClick: (task) => {
+    //             props.handleTaskDialogOpen(task);
+    //             setAnchorEl(null)
+    //         }
+    //     },
+    //     {
+    //         title: 'Delete',
+    //         onClick: (task) => {
+    //             props.onTaskDone(task, false)
+    //             setAnchorEl(null)
+    //         }
+    //     }
+    // ];
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [selectedTask, setSelectedTask] = React.useState({});

@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom';
 import { auth } from '../firebase'
 
 const AuthContext = React.createContext();
@@ -12,7 +11,6 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState();
     const [loading, setLoading] = useState(true)
 
-    const history = useHistory();
 
     function signup(email, password) {
         return auth.createUserWithEmailAndPassword(email, password)
@@ -28,6 +26,11 @@ export function AuthProvider({ children }) {
 
     function resetPassword(email) {
         return auth.sendPasswordResetEmail(email);
+    }
+
+    function updateUser(username = '') {
+        const newData = {displayName: username}
+        return auth.currentUser.updateProfile(newData);
     }
 
 
@@ -48,7 +51,8 @@ export function AuthProvider({ children }) {
         signup,
         login,
         logout,
-        resetPassword
+        resetPassword,
+        updateUser
     }
 
     return (

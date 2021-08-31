@@ -13,7 +13,10 @@ import {
   Typography
 } from '@material-ui/core'
 
-import { Link, useHistory } from 'react-router-dom'
+import { Link as RouterLink, useHistory } from 'react-router-dom'
+
+import {Link as MaterialLink} from '@material-ui/core'
+
 
 import Alert from '@material-ui/lab/Alert'
 
@@ -39,7 +42,7 @@ export default function Signup(props) {
 
   const classes = useStyles();
 
-  const { currentUser, signup } = useAuth();
+  const { signup } = useAuth();
 
 
   const [error, setError] = useState();
@@ -238,7 +241,7 @@ export default function Signup(props) {
         <br />
         <CardActions className={classes.button}>
           <Typography variant="subtitle1">
-            <Link to="/login" style={{ textDecoration: 'none' }}>Already have an Account?</Link>
+            <MaterialLink component={RouterLink} to="/login" style={{ textDecoration: 'none' }}>Already have an Account?</MaterialLink>
           </Typography>
         </CardActions>
 

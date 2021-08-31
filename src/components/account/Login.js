@@ -16,7 +16,10 @@ import {
 import Alert from '@material-ui/lab/Alert'
 
 import { useAuth } from '../../contexts/AuthContext'
-import { Link, useHistory } from 'react-router-dom'
+import { Link as RouterLink, useHistory } from 'react-router-dom'
+
+import {Link as MaterialLink} from '@material-ui/core'
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -202,13 +205,13 @@ export default function Login(props) {
         </form>
         <CardActions className={classes.button}>
           <Typography variant="subtitle1">
-            <Link to="/forgot-password" style={{ textDecoration: 'none' }}>Forgot your Password?</Link>
+            <MaterialLink component={RouterLink} to="/forgot-password" style={{ textDecoration: 'none' }}>Forgot your Password?</MaterialLink>
           </Typography>
         </CardActions>
         <br />
         <CardActions className={classes.button}>
           <Typography variant="subtitle1">
-            <Link to="/signup" style={{ textDecoration: 'none' }}>Need an Account?</Link>
+            <MaterialLink component={RouterLink} to="/signup" style={{ textDecoration: 'none' }}>Need an Account?</MaterialLink>
           </Typography>
         </CardActions>
 
